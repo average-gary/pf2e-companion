@@ -1,0 +1,182 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  PNPM_VERSION: 11
+
+jobs:
+  test:
+    name: cargo test (Rust unit + integration)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pf2e-companion/pnpm-lock.yaml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: pf2e-companion/src-tauri -> target
+
+      # The frontend has to build before src-tauri builds, since
+      # tauri.conf.json points beforeBuildCommand at pnpm build.
+      - name: pnpm install
+        working-directory: pf2e-companion
+        run: pnpm install --frozen-lockfile
+
+      - name: cargo test
+        working-directory: pf2e-companion/src-tauri
+        run: cargo test --all-features
+
+  desktop:
+    name: desktop · ${{ matrix.target }}
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-latest,   target: aarch64-apple-darwin }
+          - { os: macos-13,       target: x86_64-apple-darwin }
+          - { os: ubuntu-latest,  target: x86_64-unknown-linux-gnu }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux GTK + WebKit deps
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libsoup-3.0-dev \
+            javascriptcoregtk-4.1
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pf2e-companion/pnpm-lock.yaml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: pf2e-companion/src-tauri -> target
+          key: ${{ matrix.target }}
+
+      - name: pnpm install
+        working-directory: pf2e-companion
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm tauri build (no signing)
+        working-directory: pf2e-companion
+        run: pnpm tauri build --no-bundle --target ${{ matrix.target }}
+
+  ios:
+    name: ios · simulator
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pf2e-companion/pnpm-lock.yaml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: pf2e-companion/src-tauri -> target
+          key: ios-sim
+
+      - name: pnpm install
+        working-directory: pf2e-companion
+        run: pnpm install --frozen-lockfile
+
+      # Cross-compile Rust libs for both iOS targets. We don't run
+      # xcodebuild here — that needs signing identities, which Phase 8
+      # owns. This catches Rust-side breakage on every PR.
+      - name: cargo check · aarch64-apple-ios
+        working-directory: pf2e-companion/src-tauri
+        run: cargo check --target aarch64-apple-ios
+
+      - name: cargo check · aarch64-apple-ios-sim
+        working-directory: pf2e-companion/src-tauri
+        run: cargo check --target aarch64-apple-ios-sim
+
+  android:
+    name: android · debug
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      NDK_VERSION: "27.0.12077973"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-34
+            build-tools;34.0.0
+            ndk;${{ env.NDK_VERSION }}
+
+      - name: Export NDK_HOME
+        run: echo "NDK_HOME=$ANDROID_HOME/ndk/${{ env.NDK_VERSION }}" >> $GITHUB_ENV
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pf2e-companion/pnpm-lock.yaml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: pf2e-companion/src-tauri -> target
+          key: android
+
+      - name: pnpm install
+        working-directory: pf2e-companion
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm tauri android build · debug
+        working-directory: pf2e-companion
+        run: pnpm tauri android build --debug --apk

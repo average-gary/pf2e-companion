@@ -1,7 +1,21 @@
 # Tauri / Rust
 pf2e-companion/src-tauri/target/
-pf2e-companion/src-tauri/gen/
+pf2e-companion/src-tauri/gen/schemas/
 target/                      # rust-analyzer cache when opened above the workspace
+
+# Mobile build cruft (the Xcode + Gradle project files themselves
+# are committed — per-app capabilities and bundle IDs live there.)
+pf2e-companion/src-tauri/gen/apple/Externals/
+pf2e-companion/src-tauri/gen/apple/Pods/
+pf2e-companion/src-tauri/gen/apple/build/
+pf2e-companion/src-tauri/gen/apple/Podfile.lock
+pf2e-companion/src-tauri/gen/apple/**/xcuserdata/
+pf2e-companion/src-tauri/gen/android/.gradle/
+pf2e-companion/src-tauri/gen/android/.idea/
+pf2e-companion/src-tauri/gen/android/build/
+pf2e-companion/src-tauri/gen/android/**/build/
+pf2e-companion/src-tauri/gen/android/local.properties
+*.iml
 
 # Node
 pf2e-companion/node_modules/

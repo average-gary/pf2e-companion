@@ -2,7 +2,7 @@
 
 Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbuilding companion. Tauri 2 + SvelteKit + SQLite (FTS5 + sqlite-vec).
 
-> **Status**: Phase 3 of 9 — vault editor landed 2026-05-26.
+> **Status**: Phase 4 of 9 — mobile co-targets initialized 2026-05-26.
 > Plan: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
 ## What works
@@ -29,6 +29,13 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **`get_entity(id)` IPC** for the detail page.
 - **Detail page**: `/entity/[id]` route renders markdown body + sidebar with stat block card + sources frontmatter. `[[id]]` wikilinks in markdown are rewritten to internal hrefs. Search hits and tab targets all link through.
 - **`<Statblock />` component** for deity stat block cards (edicts/anathema/sanctification/domains/cleric spells/iconography).
+
+### Phase 4 — mobile co-targets (initialized)
+- **iOS**: `pnpm tauri ios init` produced a clean Xcode project at `src-tauri/gen/apple/`. Bundle ID `io.github.gkrause.pf2e-companion`. Both iOS Rust targets (`aarch64-apple-ios`, `aarch64-apple-ios-sim`) cross-compile cleanly with the SQLite + sqlite-vec stack. `xcodebuild` itself isn't run in this phase — that needs a signing identity, which is Phase 8's territory.
+- **Android**: `pnpm tauri android init` produced a Gradle project at `src-tauri/gen/android/`. NDK 27.0, JDK 21 (Temurin), `compileSdk` 34. Android-side build orchestration is owned by Tauri's Gradle plugin (it manages the per-API-level NDK toolchain that bare `cargo check --target aarch64-linux-android` doesn't know about).
+- **Mobile env note**: `~/.zshrc` exports `ANDROID_HOME`, `NDK_HOME`, `JAVA_HOME` and adds Android tools to `PATH`. SDK licenses accepted.
+- **CI matrix** at `.github/workflows/build.yml`: cargo test on macOS first; then a 4-target desktop matrix (macOS arm64 + x86_64, Linux x86_64, Windows x86_64), iOS cross-compile sanity, and Android debug APK build. All build-only — signing is Phase 8.
+- **What still needs a real device session**: iOS Simulator + Android Emulator hands-on UX shake-down, TestFlight + Play internal track upload, signing certificates.
 
 ### Phase 3 — vault editor (done)
 - **Vault CRUD backend** (`src-tauri/src/vault_write.rs`): `list_campaigns`, `create_campaign`, `create_entity`, `update_entity` (with rename support that propagates filename changes), `delete_entity`, `add_relation`, `delete_relation`, `list_relations`. Entity writes go through the markdown vault on disk; the notify-rs watcher re-indexes via the existing Phase 1 ingestion path.
@@ -66,7 +73,6 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 4** — mobile builds (`tauri ios init` / `tauri android init`).
 - **Phase 5** — Catholic / Reformed / Pentecostal / Orthodox lens packs.
 - **Phase 6** — LLM (Ollama + Anthropic), RAG, agent loop.
 - **Phase 7** — Foundry export round-trip + plugin SDK.
@@ -115,9 +121,27 @@ Vault data is plain markdown + JSON in a user-chosen folder. SQLite is a derived
 
 Full spec: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
-## Phase 4 next steps
+## Phase 5 next steps
 
-1. **`tauri ios init` + `tauri android init`** — wire the mobile sub-packages.
-2. **Mobile bundle CI** — extend the GitHub Actions matrix per `~/wiki/topics/pf2e-worldbuilding-tool/raw/guides/2026-05-24-desktop-app-stack-packaging-signing-2026.md`.
-3. **Mobile UX shake-down** — verify reference + miracle/alias lookup feel right at-table on iPad and iPhone; confirm the editor degrades gracefully on phone-sized screens.
-4. **TestFlight + Play internal track** for early-tester feedback.
+1. **Catholic content pack** — author `data/content/catholic/`. Richest material per the wiki ([[denominational-lens-decision]]); ~20 named saints (St George, St Patrick, St Francis, St Thérèse, the Apostles, etc.), purgatory cosmology, sacramental Thaumaturge implements.
+2. **Reformed content pack** — covenant-theology scaffold; abstract-virtue Champion causes; minister-of-Word-and-sacrament Cleric. Cessationism caveat in the lens metadata.
+3. **Pentecostal content pack** — spiritual-warfare frame; healing/tongues/prophecy charisms; Bible-hero exemplars rather than post-canon saints.
+4. **Orthodox content pack** — theosis as level-20 capstone; iconographer Monk archetype; **Aerial Toll Houses as a literal level-15+ post-mortem dungeon** (per the [[denominational-lens-decision]] worked example).
+
+## Mobile development (Phase 4 → ongoing)
+
+For iOS/Android dev you'll need:
+
+```bash
+# In ~/.zshrc (already added if you ran Phase 4):
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export NDK_HOME="$ANDROID_HOME/ndk/27.0.12077973"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH"
+
+# iOS Simulator (no signing identity required):
+pnpm tauri ios dev
+
+# Android emulator / device:
+pnpm tauri android dev
+```
