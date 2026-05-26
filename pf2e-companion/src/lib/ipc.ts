@@ -97,3 +97,18 @@ export const listLenses = () => invoke<LensManifest[]>("list_lenses");
 
 export const importFoundryPack = (rootPath: string, license: string) =>
   invoke<ImportReport>("import_foundry_pack", { rootPath, license });
+
+export interface EntityDetail {
+  id: string;
+  title: string;
+  type: string;
+  lens: string | null;
+  license_provenance: string;
+  source: string;
+  frontmatter: Record<string, unknown>;
+  body: string | null;
+  statblock: Record<string, unknown> | null;
+}
+
+export const getEntity = (id: string) =>
+  invoke<EntityDetail | null>("get_entity", { id });

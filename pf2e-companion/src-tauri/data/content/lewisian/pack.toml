@@ -1,0 +1,17 @@
+# Content pack metadata. Loaded by Db::seed_content_packs at startup.
+[pack]
+id = "lewisian"
+label = "Lewisian (mere Christianity)"
+description = """
+Default lens. Aims at the consensus across historic Christian traditions
+(Catholic / Orthodox / Anglican-Lutheran / Reformed / Pentecostal) without
+committing to denominational specifics. Pairs with the Charism + Lewisian
+magic-theology hybrid (see [[magic-theology-approaches]]).
+"""
+default = true
+license_provenance = "homebrew"
+version = "0.1.0"
+sources = [
+  "https://github.com/average-gary/pf2e-companion",
+  "wiki:pf2e-biblical-reskin/recommended-reskin-stack",
+]

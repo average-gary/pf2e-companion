@@ -118,6 +118,69 @@ pub fn list_entities(
     Ok(rows)
 }
 
+#[derive(Serialize, Debug)]
+pub struct EntityDetail {
+    pub id: String,
+    pub title: String,
+    pub r#type: String,
+    pub lens: Option<String>,
+    pub license_provenance: String,
+    pub source: String,
+    pub frontmatter: serde_json::Value,
+    pub body: Option<String>,
+    pub statblock: Option<serde_json::Value>,
+}
+
+#[tauri::command]
+pub fn get_entity(
+    id: String,
+    db: State<'_, Arc<Db>>,
+) -> Result<Option<EntityDetail>, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let mut stmt = conn
+        .prepare(
+            r#"
+            SELECT id,
+                   COALESCE(json_extract(frontmatter, '$.title'), id) AS title,
+                   type,
+                   lens,
+                   license_provenance,
+                   source,
+                   frontmatter,
+                   body,
+                   statblock
+            FROM entities
+            WHERE id = ?1
+            LIMIT 1
+            "#,
+        )
+        .map_err(|e| e.to_string())?;
+    let mut rows = stmt
+        .query_map(params![id], |row| {
+            let fm_str: String = row.get(6)?;
+            let sb_str: Option<String> = row.get(8)?;
+            Ok(EntityDetail {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                r#type: row.get(2)?,
+                lens: row.get(3)?,
+                license_provenance: row.get(4)?,
+                source: row.get(5)?,
+                frontmatter: serde_json::from_str(&fm_str)
+                    .unwrap_or(serde_json::Value::Null),
+                body: row.get(7)?,
+                statblock: sb_str
+                    .as_deref()
+                    .and_then(|s| serde_json::from_str(s).ok()),
+            })
+        })
+        .map_err(|e| e.to_string())?;
+    match rows.next() {
+        Some(r) => Ok(Some(r.map_err(|e| e.to_string())?)),
+        None => Ok(None),
+    }
+}
+
 /// Schema-version probe. Phase 0 sanity check.
 #[tauri::command]
 pub fn schema_version(db: State<'_, Arc<Db>>) -> Result<i64, String> {

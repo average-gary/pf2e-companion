@@ -2,7 +2,7 @@
 
 Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbuilding companion. Tauri 2 + SvelteKit + SQLite (FTS5 + sqlite-vec).
 
-> **Status**: Phase 1 of 9 — reference layer landed 2026-05-26.
+> **Status**: Phase 2 of 9 — Lewisian content pack landed 2026-05-26.
 > Plan: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
 ## What works
@@ -23,8 +23,15 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **Foundry-pf2e ingest stub**: `import_foundry_pack(path, license)` walks a packs directory and inserts `entities` rows tagged with the chosen license posture.
 - **UI**: 4 pages — `/` search with type filter; `/encounter` XP budget calculator + creature-XP table; `/aliases` Remaster name lookup; `/miracles` Bible-reference → spell. Lens picker in the top bar; bottom-tabs nav for mobile.
 
+### Phase 2 — Lewisian content pack (done)
+- **Bundled content** — `data/content/lewisian/` packaged into the binary via `include_dir!`. **16 entries**: 1 deity (YHWH with full Remaster stat block JSON sidecar), 4 archangels (Michael, Gabriel, Raphael, Uriel — Uriel flagged as the deuterocanonical "swing case"), 6 cosmology entries (Heaven, Sheol, Gehenna, Tartarus, Abyss, New Jerusalem), 5 class reskin notes (Champion, Cleric, Oracle, Thaumaturge, Sorcerer).
+- **Backend**: `content::load_bundled_packs` runs at startup; entries indexed under `source = 'reference'`, lens = `'lewisian'`, and surfaced through the existing search.
+- **`get_entity(id)` IPC** for the detail page.
+- **Detail page**: `/entity/[id]` route renders markdown body + sidebar with stat block card + sources frontmatter. `[[id]]` wikilinks in markdown are rewritten to internal hrefs. Search hits and tab targets all link through.
+- **`<Statblock />` component** for deity stat block cards (edicts/anathema/sanctification/domains/cleric spells/iconography).
+
 ### Tests
-**15 tests passing** (`cargo test`):
+**26 tests passing** (`cargo test`):
 ```
 running 12 tests             [unit tests in lib]
 test rules::tests::xp_budget_canonical_party_of_4 ... ok
@@ -50,7 +57,6 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 2** — Lewisian lens content pack (YHWH, archangels, cosmology, class-reskin notes).
 - **Phase 3** — full markdown editor for the worldbuilding vault.
 - **Phase 4** — mobile builds (`tauri ios init` / `tauri android init`).
 - **Phase 5** — Catholic / Reformed / Pentecostal / Orthodox lens packs.
@@ -101,9 +107,9 @@ Vault data is plain markdown + JSON in a user-chosen folder. SQLite is a derived
 
 Full spec: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
-## Phase 2 next steps
+## Phase 3 next steps
 
-1. **Lewisian content pack** — author the markdown for YHWH, Michael/Gabriel/Raphael/Uriel, cosmology entries (Heaven/Sheol/Gehenna/Tartarus/Abyss/New Jerusalem), Champion/Cleric/Oracle/Thaumaturge/Sorcerer reskin notes. Drop them under `data/content/lewisian/` and bundle.
-2. **Statblock renderer** in the Svelte UI — show the YHWH stat block as a card.
-3. **`get_entity` + entity detail page** — click a search hit to see the full entry.
-4. **Catholic lens content pack** as a follow-up.
+1. **Full markdown editor for the worldbuilding vault** (CodeMirror 6 + frontmatter; entity creation; add-relation UI).
+2. **Campaign management** — create/switch campaigns; campaign-scoped entities.
+3. **License-provenance UI** on the editor (per the Phase 0 metadata field).
+4. **Foundry-pf2e end-to-end test** against a downloaded `foundryvtt/pf2e/packs/spells` directory.

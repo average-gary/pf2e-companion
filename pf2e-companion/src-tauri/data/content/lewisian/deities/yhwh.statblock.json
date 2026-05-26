@@ -1,0 +1,36 @@
+{
+  "name": "YHWH",
+  "title": "the Lord, I AM",
+  "level": 25,
+  "type": "deity",
+  "lens": "lewisian",
+  "license_provenance": "homebrew",
+  "edicts": [
+    "love God with all your heart",
+    "love your neighbor as yourself",
+    "do justice and walk humbly",
+    "proclaim the gospel"
+  ],
+  "anathema": [
+    "take innocent life",
+    "swear false oaths in his name",
+    "consult mediums or spiritists",
+    "despair of his mercy"
+  ],
+  "areas_of_concern": ["covenant", "creation", "justice", "mercy", "the Word"],
+  "divine_attribute": ["Wisdom", "Charisma"],
+  "divine_font": "heal",
+  "sanctification": "can-choose-holy",
+  "divine_skill": "Religion",
+  "favored_weapon": "longsword",
+  "domains": ["Creation", "Truth", "Healing", "Zeal"],
+  "alternate_domains": ["Family", "Knowledge", "Soul", "Vigil"],
+  "cleric_spells": [
+    {"rank": 1, "name": "bless"},
+    {"rank": 3, "name": "holy light"},
+    {"rank": 5, "name": "angelic messenger"}
+  ],
+  "religious_symbol": "a plain cross",
+  "sacred_animal": "lamb",
+  "sacred_colors": ["gold", "white"]
+}

@@ -101,12 +101,14 @@
 <ul class="hits">
   {#each filteredHits as hit (hit.id)}
     <li>
-      <header>
-        <span class="type">{hit.type}</span>
-        <h2>{hit.title}</h2>
-        <span class="score">{hit.score.toFixed(2)}</span>
-      </header>
-      <p class="snippet">{@html hit.snippet}</p>
+      <a class="hit-link" href={`/entity/${encodeURIComponent(hit.id)}`}>
+        <header>
+          <span class="type">{hit.type}</span>
+          <h2>{hit.title}</h2>
+          <span class="score">{hit.score.toFixed(2)}</span>
+        </header>
+        <p class="snippet">{@html hit.snippet}</p>
+      </a>
     </li>
   {:else}
     <li class="empty">
@@ -202,10 +204,18 @@
     gap: 0.5rem;
   }
   .hits li {
-    padding: 0.75rem 1rem;
     border-radius: 10px;
     border: 1px solid var(--line);
     background: var(--bg-soft);
+    overflow: hidden;
+  }
+  .hit-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: inherit;
+  }
+  .hit-link:hover {
+    background: color-mix(in srgb, currentColor 4%, transparent);
   }
   .hits li.empty {
     color: var(--muted);

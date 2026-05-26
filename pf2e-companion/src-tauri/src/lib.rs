@@ -11,6 +11,7 @@
 //! `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
 mod commands;
+mod content;
 mod db;
 mod foundry;
 mod rules;
@@ -43,6 +44,7 @@ pub fn run() {
             let db = db::Db::open(&db_path)?;
             db.seed_smoke_fixture()?;
             db.seed_reference_data()?;
+            content::load_bundled_packs(&db)?;
 
             let db_arc = Arc::new(db);
             app.manage(db_arc.clone());
@@ -66,6 +68,7 @@ pub fn run() {
             commands::validate_statblock,
             commands::list_lenses,
             commands::import_foundry_pack,
+            commands::get_entity,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
