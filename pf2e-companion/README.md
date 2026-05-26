@@ -2,7 +2,7 @@
 
 Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbuilding companion. Tauri 2 + SvelteKit + SQLite (FTS5 + sqlite-vec).
 
-> **Status**: Phase 4 of 9 — mobile co-targets initialized 2026-05-26.
+> **Status**: Phase 5 of 9 — all 5 denominational lens packs landed 2026-05-26.
 > Plan: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
 ## What works
@@ -29,6 +29,15 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **`get_entity(id)` IPC** for the detail page.
 - **Detail page**: `/entity/[id]` route renders markdown body + sidebar with stat block card + sources frontmatter. `[[id]]` wikilinks in markdown are rewritten to internal hrefs. Search hits and tab targets all link through.
 - **`<Statblock />` component** for deity stat block cards (edicts/anathema/sanctification/domains/cleric spells/iconography).
+
+### Phase 5 — all 5 lens packs (done)
+- **Lewisian** (16 entries; v1 default; mere-Christianity)
+- **Catholic** (35 files): full 9-choir hierarchy, **20 saints** (Mary, Joseph, the Twelve Apostles, four archangels, Francis-of-Assisi, Thérèse-of-Lisieux), **purgatory** as a transitional plane, sacramental cleric + relic-pilgrim Thaumaturge with the formal first/second/third-class relic taxonomy.
+- **Reformed** (20 files): 66-book canon, cessationism front-and-center in cleric.md and pack metadata, 6 covenant-figure exemplars (NOT saints — explicit "exemplary witness, not patron" block in every entry), no purgatory, Word-as-sword Thaumaturge, dedicated `reference/covenants.md` (Adamic/Noahic/Abrahamic/Mosaic/Davidic/New).
+- **Pentecostal** (21 files): strong continuationism, 6 Bible-hero exemplars (Elijah, Daniel, Paul, Philip the Evangelist + Michael, Gabriel), three-tier demonology (Tartarus / Abyss / Gehenna), dedicated `reference/charismata.md` mapping the 9 gifts of 1 Cor 12:8-10 to PF2e Divine spells.
+- **Orthodox** (24 files): Septuagint+ canon, **Synaxis of Seven archangels** (Michael, Gabriel, Raphael, Uriel + Selaphiel, Jegudiel, Barachiel), `cosmology/aerial-toll-houses.md` as a campaign-grade level-15-to-20 mega-dungeon with 20 toll-stations, dedicated iconographer/hesychast `classes/monk.md` with the Jesus Prayer as a continuous Focus-spell mechanic, `reference/theosis.md` with a Tabor-light level-20 capstone.
+
+**Total: 116 content entries across 5 packs**; FTS surfaces lens-distinctive terms cleanly (`purgatory` → Catholic only; `toll` → Orthodox; `covenant` → Reformed; `charism` → Pentecostal). Three new tests in `tests/phase5.rs` (`all_five_lens_packs_load`, `lens_specific_distinctives_present`, `fts_surfaces_distinctive_content_per_lens`).
 
 ### Phase 4 — mobile co-targets (initialized)
 - **iOS**: `pnpm tauri ios init` produced a clean Xcode project at `src-tauri/gen/apple/`. Bundle ID `io.github.gkrause.pf2e-companion`. Both iOS Rust targets (`aarch64-apple-ios`, `aarch64-apple-ios-sim`) cross-compile cleanly with the SQLite + sqlite-vec stack. `xcodebuild` itself isn't run in this phase — that needs a signing identity, which is Phase 8's territory.
@@ -73,7 +82,6 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 5** — Catholic / Reformed / Pentecostal / Orthodox lens packs.
 - **Phase 6** — LLM (Ollama + Anthropic), RAG, agent loop.
 - **Phase 7** — Foundry export round-trip + plugin SDK.
 - **Phase 8** — App-store submission + signing pipeline.
@@ -121,12 +129,13 @@ Vault data is plain markdown + JSON in a user-chosen folder. SQLite is a derived
 
 Full spec: `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
 
-## Phase 5 next steps
+## Phase 6 next steps
 
-1. **Catholic content pack** — author `data/content/catholic/`. Richest material per the wiki ([[denominational-lens-decision]]); ~20 named saints (St George, St Patrick, St Francis, St Thérèse, the Apostles, etc.), purgatory cosmology, sacramental Thaumaturge implements.
-2. **Reformed content pack** — covenant-theology scaffold; abstract-virtue Champion causes; minister-of-Word-and-sacrament Cleric. Cessationism caveat in the lens metadata.
-3. **Pentecostal content pack** — spiritual-warfare frame; healing/tongues/prophecy charisms; Bible-hero exemplars rather than post-canon saints.
-4. **Orthodox content pack** — theosis as level-20 capstone; iconographer Monk archetype; **Aerial Toll Houses as a literal level-15+ post-mortem dungeon** (per the [[denominational-lens-decision]] worked example).
+1. **LLM client** in the Rust core (`src-tauri/src/llm.rs`): Anthropic + Ollama providers behind a single trait; BYO-key onboarding flow.
+2. **RAG over the bundled content** via the existing sqlite-vec virtual table — chunk + embed entities at startup; hybrid FTS + vector at query time.
+3. **Tool-use loop** with the PF2e validators we already have (`xp_budget`, `validate_statblock`, `lookup_alias`, `lookup_miracle`).
+4. **Anthropic prompt caching** for the always-on world-bible (per the wiki finding: ~10× cost reduction on 60K-token canon).
+5. **Eval harness** for canon-faithfulness and statblock validity.
 
 ## Mobile development (Phase 4 → ongoing)
 

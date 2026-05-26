@@ -1,0 +1,38 @@
+# Content pack metadata. Loaded by Db::seed_content_packs at startup.
+[pack]
+id = "orthodox"
+label = "Eastern Orthodox"
+description = """
+Eastern Orthodox lens. The most distinctive aesthetic in Christian-fantasy
+tabletop and the least crowded of the historic-tradition niches: late-
+Byzantine visual register (Hagia Sophia, gold leaf, royal porphyry), the
+broadest historic canon (Septuagint + 1-3 Maccabees, Psalm 151, Prayer of
+Manasseh), seven named archangels (Michael, Gabriel, Raphael, Uriel,
+Selaphiel, Jegudiel, Barachiel), continuationist charisms, and three
+load-bearing distinctives drawn from the wiki worked example:
+
+- Theosis as soteriology — the lifelong arc from katharsis to theoria to
+  union, encoded as a level-20 capstone in which a PC literally radiates
+  uncreated light (2 Pet 1:4; Athanasius; Palamas's essence/energies).
+- Aerial Toll Houses (theologoumenon) — the post-mortem demonic-prosecution
+  cosmology rendered as a literal level-15+ post-mortem mega-dungeon, twenty
+  toll-stations indexed to twenty sins.
+- Hesychasm and the Jesus Prayer — the Athonite contemplative tradition,
+  surfaced as a continuous Focus-spell mechanic on the Iconographer/Hesychast
+  Monk archetype.
+
+Icons are theologically loaded — windows to heaven, not idols (John of
+Damascus, Seventh Ecumenical Council). Saints are venerated, not worshipped.
+Pairs with the Charism + Lewisian magic-theology hybrid.
+"""
+default = false
+license_provenance = "homebrew"
+version = "0.1.0"
+sources = [
+  "https://github.com/average-gary/pf2e-companion",
+  "wiki:pf2e-biblical-reskin/denominational-lens-decision § Eastern Orthodox",
+  "wiki:pf2e-biblical-reskin/yhwh-deity-template § Eastern Orthodox fill",
+  "wiki:pf2e-biblical-reskin/2026-05-24-denominational-scope-aerial-toll-houses",
+  "wiki:pf2e-biblical-reskin/2026-05-24-denominational-scope-theosis",
+  "wiki:pf2e-biblical-reskin/2026-05-24-denominational-scope-angelic-hierarchy",
+]

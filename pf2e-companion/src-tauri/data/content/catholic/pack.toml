@@ -1,0 +1,27 @@
+# Content pack metadata. Loaded by Db::seed_content_packs at startup.
+[pack]
+id = "catholic"
+label = "Catholic (Roman / Latin)"
+description = """
+Roman Catholic lens. 73-book canon (full deuterocanon — Tobit, Judith,
+Wisdom, Sirach, Baruch, 1-2 Maccabees). Full nine-choir Pseudo-Dionysian
+angelic hierarchy per Aquinas (*Summa* I.108). Seven sacraments + the
+broader sacramentals as ritual mechanics. Mary venerated as Queen of
+Heaven (hyperdulia, not latria). Named patron-saint Champion causes —
+the richest material in the genre. Thaumaturge implements map 1:1 to
+Catholic relic categories. Purgatory as a transitional plane. All
+charisms active (continuationist). Pairs with the Charism + Lewisian
+magic-theology hybrid (see [[magic-theology-approaches]]). Closest in
+tone to Tolkien's *Silmarillion* and a medieval-Catholic vibe.
+"""
+default = false
+license_provenance = "homebrew"
+version = "0.1.0"
+sources = [
+  "https://github.com/average-gary/pf2e-companion",
+  "wiki:pf2e-biblical-reskin/denominational-lens-decision § Catholic",
+  "wiki:pf2e-biblical-reskin/yhwh-deity-template § Catholic fill",
+  "wiki:pf2e-biblical-reskin/biblical-cosmology-pf2e-mapping",
+  "Aquinas, Summa Theologiae I q.108 (angelic hierarchy)",
+  "Catechism of the Catholic Church §§ 1030-1032 (purgatory), §§ 946-962 (communion of saints)",
+]

@@ -1,0 +1,36 @@
+{
+  "name": "YHWH",
+  "title": "the All-Holy Trinity, Pantokrator",
+  "level": 25,
+  "type": "deity",
+  "lens": "orthodox",
+  "license_provenance": "homebrew",
+  "edicts": [
+    "pursue union with God (theosis)",
+    "keep the fasts",
+    "venerate the saints and icons",
+    "give alms"
+  ],
+  "anathema": [
+    "blaspheme the icons",
+    "despair of theosis",
+    "schism from the Body",
+    "presume upon grace"
+  ],
+  "areas_of_concern": ["theosis", "liturgy", "icons", "ascesis", "eucharist"],
+  "divine_attribute": ["Wisdom", "Charisma"],
+  "divine_font": "heal",
+  "sanctification": "can-choose-holy",
+  "divine_skill": "Religion",
+  "favored_weapon": "longsword",
+  "domains": ["Healing", "Truth", "Soul", "Vigil"],
+  "alternate_domains": ["Creation", "Knowledge", "Zeal"],
+  "cleric_spells": [
+    {"rank": 1, "name": "bless"},
+    {"rank": 3, "name": "holy light"},
+    {"rank": 5, "name": "divine wrath"}
+  ],
+  "religious_symbol": "Christ Pantokrator icon",
+  "sacred_animal": "lamb (paschal) and eagle (John the Theologian)",
+  "sacred_colors": ["gold", "red"]
+}

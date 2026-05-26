@@ -1,0 +1,33 @@
+# Content pack metadata. Loaded by Db::seed_content_packs at startup.
+[pack]
+id = "pentecostal"
+label = "Pentecostal / Charismatic"
+description = """
+Strong-continuationist lens. The 66-book (Protestant) canon. Charisms of
+1 Cor 12 — tongues, prophecy, healing, miracles, discernment of spirits —
+are active in the present age and are the load-bearing distinctive of this
+pack: every Cleric, Oracle, and Champion is presumed to manifest them.
+Pairs with the Charism magic-theology approach (#1 in
+[[magic-theology-approaches]]) — the cleanest fit of any lens. Active
+spiritual-warfare cosmology in the Frank Peretti *This Present Darkness*
+key: territorial spirits, principalities, strongholds, deliverance
+ministry. No saints in the venerated sense; no Mary, no purgatory, no
+relics — Bible heroes only as exemplars. Two named archangels (Michael,
+Gabriel); Raphael flagged as opt-in for tables that accept Tobit. Caveat:
+**charisms are flavor, not mechanical input** — never require a player to
+pray or speak in tongues at the table to cast a spell (the DragonRaid
+trap; see [[prior-christian-rpg-lessons]]).
+"""
+default = false
+license_provenance = "homebrew"
+version = "0.1.0"
+sources = [
+  "https://github.com/average-gary/pf2e-companion",
+  "wiki:pf2e-biblical-reskin/denominational-lens-decision § Pentecostal",
+  "wiki:pf2e-biblical-reskin/yhwh-deity-template § Pentecostal fill",
+  "wiki:pf2e-biblical-reskin/magic-theology-approaches § approach #1 Charism",
+  "wiki:pf2e-biblical-reskin/cessationism-continuationism",
+  "1 Corinthians 12:7-11 (the nine charisms)",
+  "Acts 2 (Pentecost)",
+  "Frank Peretti, *This Present Darkness* (Crossway, 1986) — cultural touchstone for spiritual-warfare framing",
+]

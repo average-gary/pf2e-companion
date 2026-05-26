@@ -1,0 +1,39 @@
+{
+  "name": "YHWH",
+  "title": "the Lord, the I AM",
+  "level": 25,
+  "type": "deity",
+  "lens": "reformed",
+  "license_provenance": "homebrew",
+  "edicts": [
+    "preach the Word in season and out",
+    "love God and neighbor",
+    "do justice and walk humbly",
+    "uphold the covenant in family and congregation"
+  ],
+  "anathema": [
+    "worship images or doctrines as idols",
+    "oppress the poor or the alien",
+    "presume upon God's mercy or despair of it",
+    "consult mediums or spiritists"
+  ],
+  "areas_of_concern": ["the Word", "covenant", "justice", "grace", "providence"],
+  "divine_attribute": ["Wisdom", "Charisma"],
+  "divine_font": "heal",
+  "sanctification": "can-choose-holy",
+  "sanctification_alternate": "none",
+  "divine_skill": "Religion",
+  "favored_weapon": "longsword",
+  "domains": ["Truth", "Knowledge", "Zeal", "Vigil"],
+  "alternate_domains": ["Creation", "Healing", "Soul"],
+  "cleric_spells": [
+    {"rank": 1, "name": "bless"},
+    {"rank": 3, "name": "holy light"},
+    {"rank": 5, "name": "command"}
+  ],
+  "religious_symbol": "an open Bible above a plain cross",
+  "sacred_animal": "lamb",
+  "sacred_colors": ["black", "white"],
+  "cessationism": true,
+  "notes": "Reformed cessationist lens: routine Cleric casting theologically loaded. Frame each casting as rare-providential sign. Pharasma-precedent sanctification: none is available as escape hatch."
+}

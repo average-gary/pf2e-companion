@@ -1,0 +1,36 @@
+{
+  "name": "YHWH",
+  "title": "the Holy Trinity, Lord of Hosts",
+  "level": 25,
+  "type": "deity",
+  "lens": "catholic",
+  "license_provenance": "homebrew",
+  "edicts": [
+    "love God with all your heart",
+    "love your neighbor as yourself",
+    "honor the sacraments",
+    "defend the Church and the poor"
+  ],
+  "anathema": [
+    "deny the Real Presence",
+    "take innocent life",
+    "abandon the sacraments",
+    "despair of God's mercy"
+  ],
+  "areas_of_concern": ["covenant", "sacraments", "the Church", "justice", "mercy"],
+  "divine_attribute": ["Wisdom", "Charisma"],
+  "divine_font": "heal",
+  "sanctification": "can-choose-holy",
+  "divine_skill": "Religion",
+  "favored_weapon": "longsword",
+  "domains": ["Creation", "Truth", "Healing", "Family"],
+  "alternate_domains": ["Soul", "Repose", "Zeal", "Indulgence"],
+  "cleric_spells": [
+    {"rank": 1, "name": "bless"},
+    {"rank": 3, "name": "heal"},
+    {"rank": 5, "name": "angelic messenger"}
+  ],
+  "religious_symbol": "Crucifix",
+  "sacred_animal": "lamb",
+  "sacred_colors": ["gold", "white"]
+}

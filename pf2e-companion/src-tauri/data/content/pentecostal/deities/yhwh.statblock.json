@@ -1,0 +1,36 @@
+{
+  "name": "YHWH",
+  "title": "the Lord, Father of the Spirit-Outpouring",
+  "level": 25,
+  "type": "deity",
+  "lens": "pentecostal",
+  "license_provenance": "homebrew",
+  "edicts": [
+    "obey the Spirit's leading",
+    "lay hands on the sick",
+    "proclaim freedom to captives",
+    "pursue holiness"
+  ],
+  "anathema": [
+    "grieve the Spirit",
+    "deny the gifts",
+    "profane the gathered church",
+    "love money"
+  ],
+  "areas_of_concern": ["Spirit", "healing", "prophecy", "deliverance", "evangelism"],
+  "divine_attribute": ["Wisdom", "Charisma"],
+  "divine_font": "heal",
+  "sanctification": "can-choose-holy",
+  "divine_skill": "Religion",
+  "favored_weapon": "longsword",
+  "domains": ["Healing", "Truth", "Zeal", "Vigil"],
+  "alternate_domains": ["Knowledge", "Family", "Confidence"],
+  "cleric_spells": [
+    {"rank": 1, "name": "heal"},
+    {"rank": 3, "name": "holy light"},
+    {"rank": 5, "name": "banishment"}
+  ],
+  "religious_symbol": "a cross with a descending dove",
+  "sacred_animal": "dove",
+  "sacred_colors": ["red", "white"]
+}

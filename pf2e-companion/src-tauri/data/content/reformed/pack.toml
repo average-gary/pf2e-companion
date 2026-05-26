@@ -1,0 +1,32 @@
+# Content pack metadata. Loaded by Db::seed_content_packs at startup.
+[pack]
+id = "reformed"
+label = "Reformed (Calvinist / Presbyterian)"
+description = """
+Reformed / Calvinist / Presbyterian lens. 66-book Protestant canon (sola
+scriptura; deuterocanon edifying-not-doctrinal). Flat angelology
+(angel/archangel only); two named archangels — Michael and Gabriel.
+**Cessationist** — apostolic charisms (tongues, prophecy, healing as
+miraculous sign) ceased with the closing of the canon, so routine Cleric
+magic is theologically loaded; this pack reframes Divine casting as
+rare-providential signs (lean toward magic-theology approaches #3
+all-non-divine-is-demonic or #4 strict-historicist; see
+[[magic-theology-approaches]]). Champion causes attach to abstract
+virtues (Justice, Mercy, Faithfulness, Truth) under YHWH directly — no
+saint-veneration, no Marian intercession, no purgatory, no relics.
+Covenant theology (Adamic / Noahic / Abrahamic / Mosaic / Davidic / New)
+is the worldbuilding scaffold; see [[reformed:covenants]]. Word-as-sword
+(Heb 4:12, Eph 6:17) is the canonical Reformed weapon imagery.
+"""
+default = false
+license_provenance = "homebrew"
+version = "0.1.0"
+sources = [
+  "wiki:pf2e-biblical-reskin/denominational-lens-decision § Reformed",
+  "wiki:pf2e-biblical-reskin/yhwh-deity-template § Reformed fill",
+  "wiki:pf2e-biblical-reskin/magic-theology-approaches",
+  "wiki:pf2e-biblical-reskin/2026-05-24-denominational-scope-cessationism-continuationism",
+  "Westminster Confession of Faith (1646), I.1, I.6 (sola scriptura, sufficiency of canon)",
+  "Heidelberg Catechism (1563), Lord's Day 35, Q.96-98 (no images)",
+  "Calvin, Institutes of the Christian Religion (1559), I.11-12 (idolatry); IV.19 (sacraments)",
+]
