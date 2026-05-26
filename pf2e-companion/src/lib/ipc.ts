@@ -112,3 +112,64 @@ export interface EntityDetail {
 
 export const getEntity = (id: string) =>
   invoke<EntityDetail | null>("get_entity", { id });
+
+// === Phase 3 ===========================================================
+
+export interface Campaign {
+  id: string;
+  name: string;
+  default_lens: string | null;
+  entity_count: number;
+}
+
+export interface CrudResult {
+  id: string;
+  file_path: string;
+}
+
+export interface EntityInputDTO {
+  campaign_id: string;
+  type: string;
+  title: string;
+  lens?: string | null;
+  license_provenance?: string | null;
+  body?: string | null;
+  frontmatter: Record<string, unknown>;
+}
+
+export interface EntityPatchDTO {
+  title?: string | null;
+  lens?: string | null;
+  license_provenance?: string | null;
+  body?: string | null;
+  frontmatter?: Record<string, unknown> | null;
+}
+
+export interface RelationRow {
+  from_id: string;
+  edge_type: string;
+  to_id: string;
+}
+
+export const listCampaigns = () => invoke<Campaign[]>("list_campaigns");
+
+export const createCampaign = (name: string, defaultLens: string | null = null) =>
+  invoke<Campaign>("create_campaign", { name, defaultLens });
+
+export const createEntity = (input: EntityInputDTO) =>
+  invoke<CrudResult>("create_entity", { input });
+
+export const updateEntity = (id: string, patch: EntityPatchDTO) =>
+  invoke<CrudResult>("update_entity", { id, patch });
+
+export const deleteEntity = (id: string) =>
+  invoke<void>("delete_entity", { id });
+
+export const addRelation = (fromId: string, edgeType: string, toId: string) =>
+  invoke<void>("add_relation", { fromId, edgeType, toId });
+
+export const deleteRelation = (fromId: string, edgeType: string, toId: string) =>
+  invoke<void>("delete_relation", { fromId, edgeType, toId });
+
+export const listRelations = (entityId: string) =>
+  invoke<RelationRow[]>("list_relations", { entityId });

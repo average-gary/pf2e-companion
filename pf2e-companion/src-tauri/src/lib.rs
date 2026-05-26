@@ -16,6 +16,7 @@ mod db;
 mod foundry;
 mod rules;
 mod vault;
+mod vault_write;
 
 use std::sync::Arc;
 use tauri::Manager;
@@ -50,6 +51,8 @@ pub fn run() {
             app.manage(db_arc.clone());
 
             let vault_root = app_data.join("vault");
+            std::fs::create_dir_all(&vault_root).ok();
+            app.manage(Arc::new(vault_write::VaultRoot(vault_root.clone())));
             if let Err(e) = vault::spawn(vault_root, db_arc.clone()) {
                 tracing::error!(error = %e, "failed to start vault watcher");
             }
@@ -69,6 +72,14 @@ pub fn run() {
             commands::list_lenses,
             commands::import_foundry_pack,
             commands::get_entity,
+            commands::list_campaigns,
+            commands::create_campaign,
+            commands::create_entity,
+            commands::update_entity,
+            commands::delete_entity,
+            commands::add_relation,
+            commands::delete_relation,
+            commands::list_relations,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

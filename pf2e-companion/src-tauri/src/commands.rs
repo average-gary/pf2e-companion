@@ -5,6 +5,9 @@
 use crate::db::Db;
 use crate::foundry::{self, ImportReport, LicensePosture};
 use crate::rules::{self, Difficulty};
+use crate::vault_write::{
+    self, Campaign, CrudResult, EntityInput, EntityPatch, RelationRow, VaultRoot,
+};
 use anyhow::Result;
 use rusqlite::params;
 use serde::Serialize;
@@ -365,6 +368,81 @@ pub fn import_foundry_pack(
     };
     let path = PathBuf::from(root_path);
     foundry::import_packs(&db, &path, posture).map_err(|e| e.to_string())
+}
+
+// === Phase 3 — campaigns + entity CRUD =====================================
+
+#[tauri::command]
+pub fn list_campaigns(
+    vault: State<'_, Arc<VaultRoot>>,
+    db: State<'_, Arc<Db>>,
+) -> Result<Vec<Campaign>, String> {
+    vault_write::list_campaigns(&vault, &db).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn create_campaign(
+    name: String,
+    default_lens: Option<String>,
+    vault: State<'_, Arc<VaultRoot>>,
+) -> Result<Campaign, String> {
+    vault_write::create_campaign(&vault, &name, default_lens.as_deref())
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn create_entity(
+    input: EntityInput,
+    vault: State<'_, Arc<VaultRoot>>,
+) -> Result<CrudResult, String> {
+    vault_write::create_entity(&vault, &input).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn update_entity(
+    id: String,
+    patch: EntityPatch,
+    vault: State<'_, Arc<VaultRoot>>,
+    db: State<'_, Arc<Db>>,
+) -> Result<CrudResult, String> {
+    vault_write::update_entity(&vault, &db, &id, &patch).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_entity(
+    id: String,
+    vault: State<'_, Arc<VaultRoot>>,
+    db: State<'_, Arc<Db>>,
+) -> Result<(), String> {
+    vault_write::delete_entity(&vault, &db, &id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn add_relation(
+    from_id: String,
+    edge_type: String,
+    to_id: String,
+    db: State<'_, Arc<Db>>,
+) -> Result<(), String> {
+    vault_write::add_relation(&db, &from_id, &edge_type, &to_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_relation(
+    from_id: String,
+    edge_type: String,
+    to_id: String,
+    db: State<'_, Arc<Db>>,
+) -> Result<(), String> {
+    vault_write::delete_relation(&db, &from_id, &edge_type, &to_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn list_relations(
+    entity_id: String,
+    db: State<'_, Arc<Db>>,
+) -> Result<Vec<RelationRow>, String> {
+    vault_write::list_relations(&db, &entity_id).map_err(|e| e.to_string())
 }
 
 /// The 5 v1 lens packs. Phase 1 returns the manifest; the actual content

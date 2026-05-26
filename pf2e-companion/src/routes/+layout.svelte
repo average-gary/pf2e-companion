@@ -2,14 +2,18 @@
   import { onMount } from "svelte";
   import { page } from "$app/state";
   import { ensureLensesLoaded, lensState } from "$lib/lens.svelte";
+  import { campaignState, refreshCampaigns } from "$lib/campaign.svelte";
 
   let { children } = $props();
 
-  onMount(ensureLensesLoaded);
+  onMount(async () => {
+    await Promise.all([ensureLensesLoaded(), refreshCampaigns()]);
+  });
 
   const tabs = [
     { href: "/", icon: "🔍", label: "Search" },
     { href: "/encounter", icon: "⚔️", label: "Encounter" },
+    { href: "/vault", icon: "📜", label: "Vault" },
     { href: "/aliases", icon: "🔄", label: "Aliases" },
     { href: "/miracles", icon: "📖", label: "Miracles" },
   ];
@@ -18,16 +22,30 @@
 <div class="app">
   <header class="topbar">
     <span class="brand">pf2e-companion</span>
-    <label class="lens-picker">
-      <span>Lens</span>
-      <select bind:value={lensState.active}>
-        {#each lensState.manifests as l (l.id)}
-          <option value={l.id}>{l.label}</option>
-        {:else}
-          <option value="lewisian">Lewisian</option>
-        {/each}
-      </select>
-    </label>
+    <div class="pickers">
+      <label class="picker">
+        <span>Campaign</span>
+        <select
+          bind:value={campaignState.active}
+          aria-label="Active campaign"
+        >
+          <option value={null}>—</option>
+          {#each campaignState.campaigns as c (c.id)}
+            <option value={c.id}>{c.name}</option>
+          {/each}
+        </select>
+      </label>
+      <label class="picker">
+        <span>Lens</span>
+        <select bind:value={lensState.active}>
+          {#each lensState.manifests as l (l.id)}
+            <option value={l.id}>{l.label}</option>
+          {:else}
+            <option value="lewisian">Lewisian</option>
+          {/each}
+        </select>
+      </label>
+    </div>
   </header>
 
   <main>
@@ -89,20 +107,27 @@
     font-weight: 600;
     font-size: 0.95rem;
   }
-  .lens-picker {
+  .pickers {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .picker {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--muted);
   }
-  .lens-picker select {
+  .picker select {
     font: inherit;
     color: inherit;
     background: var(--bg-soft);
     border: 1px solid var(--line);
     border-radius: 6px;
     padding: 0.25rem 0.4rem;
+    max-width: 12rem;
   }
 
   main {
