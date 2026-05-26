@@ -1,0 +1,968 @@
+[
+  {
+    "legacy_name": "Aasimar",
+    "remaster_name": "Nephilim",
+    "category": "ancestry",
+    "notes": "merged into Nephilim"
+  },
+  {
+    "legacy_name": "Aphorite",
+    "remaster_name": "Nephilim",
+    "category": "ancestry",
+    "notes": "merged"
+  },
+  {
+    "legacy_name": "Ganzi",
+    "remaster_name": "Nephilim",
+    "category": "ancestry",
+    "notes": "merged"
+  },
+  {
+    "legacy_name": "Grippli",
+    "remaster_name": "Tripkee",
+    "category": "ancestry",
+    "notes": "ancestry"
+  },
+  {
+    "legacy_name": "Half-Elf",
+    "remaster_name": "Aiuvarin",
+    "category": "ancestry",
+    "notes": "heritage"
+  },
+  {
+    "legacy_name": "Half-Orc",
+    "remaster_name": "Dromaar",
+    "category": "ancestry",
+    "notes": "heritage"
+  },
+  {
+    "legacy_name": "Ifrit (ancestry)",
+    "remaster_name": "Naari",
+    "category": "ancestry",
+    "notes": "distinct from Ifrit (creature)"
+  },
+  {
+    "legacy_name": "Tiefling",
+    "remaster_name": "Nephilim",
+    "category": "ancestry",
+    "notes": "merged"
+  },
+  {
+    "legacy_name": "Alertness",
+    "remaster_name": "Perception Expertise",
+    "category": "class-feature",
+    "notes": "Multiple classes"
+  },
+  {
+    "legacy_name": "Attack of Opportunity",
+    "remaster_name": "Reactive Strike",
+    "category": "class-feature",
+    "notes": "Action; multiple classes"
+  },
+  {
+    "legacy_name": "Druidic Language",
+    "remaster_name": "Wildsong",
+    "category": "class-feature",
+    "notes": "Druid"
+  },
+  {
+    "legacy_name": "Great Fortitude",
+    "remaster_name": "Fortitude / Will / Reflex Expertise",
+    "category": "class-feature",
+    "notes": "Multi-class save renames"
+  },
+  {
+    "legacy_name": "Iron Will",
+    "remaster_name": "Fortitude / Will / Reflex Expertise",
+    "category": "class-feature",
+    "notes": "Multi-class save renames"
+  },
+  {
+    "legacy_name": "Lightning Reflexes",
+    "remaster_name": "Fortitude / Will / Reflex Expertise",
+    "category": "class-feature",
+    "notes": "Multi-class save renames"
+  },
+  {
+    "legacy_name": "Slippery Mind",
+    "remaster_name": "Agile Mind",
+    "category": "class-feature",
+    "notes": "Rogue"
+  },
+  {
+    "legacy_name": "Trackless Step",
+    "remaster_name": "Trackless Journey",
+    "category": "class-feature",
+    "notes": "Ranger"
+  },
+  {
+    "legacy_name": "Wild Empathy",
+    "remaster_name": "Voice of Nature",
+    "category": "class-feature",
+    "notes": "Druid"
+  },
+  {
+    "legacy_name": "Wild Order",
+    "remaster_name": "Untamed Order",
+    "category": "class-feature",
+    "notes": "Druid"
+  },
+  {
+    "legacy_name": "Wild Stride",
+    "remaster_name": "Unimpeded Journey",
+    "category": "class-feature",
+    "notes": "Ranger"
+  },
+  {
+    "legacy_name": "Air/Earth/Fire/Water Mephit",
+    "remaster_name": "Air/Earth/Fire/Water Scamp",
+    "category": "creature",
+    "notes": "Mephit"
+  },
+  {
+    "legacy_name": "Astral Deva",
+    "remaster_name": "Tabellia",
+    "category": "creature",
+    "notes": "Angel"
+  },
+  {
+    "legacy_name": "Azure Worm",
+    "remaster_name": "Cave Worm / Magma Worm / Benthic Worm",
+    "category": "creature",
+    "notes": "Worms"
+  },
+  {
+    "legacy_name": "Crimson Worm",
+    "remaster_name": "Cave Worm / Magma Worm / Benthic Worm",
+    "category": "creature",
+    "notes": "Worms"
+  },
+  {
+    "legacy_name": "Deep Gnome",
+    "remaster_name": "Umbral Gnome",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Djinni",
+    "remaster_name": "Jaathoom / Ifrit (creature) / Faydhaan / Jabali / Jann",
+    "category": "creature",
+    "notes": "Genie"
+  },
+  {
+    "legacy_name": "Dretch",
+    "remaster_name": "Pusk",
+    "category": "creature",
+    "notes": "Demon"
+  },
+  {
+    "legacy_name": "Duergar",
+    "remaster_name": "Hryngar",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Efreeti",
+    "remaster_name": "Jaathoom / Ifrit (creature) / Faydhaan / Jabali / Jann",
+    "category": "creature",
+    "notes": "Genie"
+  },
+  {
+    "legacy_name": "Fire Yai",
+    "remaster_name": "Caldera Oni / Snow Oni / Island Oni",
+    "category": "creature",
+    "notes": "Yai → Oni"
+  },
+  {
+    "legacy_name": "Frost Troll",
+    "remaster_name": "Ice Troll",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Gnoll",
+    "remaster_name": "Kholo",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Ice Yai",
+    "remaster_name": "Caldera Oni / Snow Oni / Island Oni",
+    "category": "creature",
+    "notes": "Yai → Oni"
+  },
+  {
+    "legacy_name": "Janni",
+    "remaster_name": "Jaathoom / Ifrit (creature) / Faydhaan / Jabali / Jann",
+    "category": "creature",
+    "notes": "Genie"
+  },
+  {
+    "legacy_name": "Lemure",
+    "remaster_name": "Ort",
+    "category": "creature",
+    "notes": "Devil"
+  },
+  {
+    "legacy_name": "Lillend",
+    "remaster_name": "Kanya",
+    "category": "creature",
+    "notes": "Azata"
+  },
+  {
+    "legacy_name": "Locathah",
+    "remaster_name": "Athamaru",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Marid",
+    "remaster_name": "Jaathoom / Ifrit (creature) / Faydhaan / Jabali / Jann",
+    "category": "creature",
+    "notes": "Genie"
+  },
+  {
+    "legacy_name": "Pit Fiend",
+    "remaster_name": "Nessari",
+    "category": "creature",
+    "notes": "Devil"
+  },
+  {
+    "legacy_name": "Purple Worm",
+    "remaster_name": "Cave Worm / Magma Worm / Benthic Worm",
+    "category": "creature",
+    "notes": "Worms"
+  },
+  {
+    "legacy_name": "Sea Devil",
+    "remaster_name": "Sedacthy",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Shaitan",
+    "remaster_name": "Jaathoom / Ifrit (creature) / Faydhaan / Jabali / Jann",
+    "category": "creature",
+    "notes": "Genie"
+  },
+  {
+    "legacy_name": "Water Yai",
+    "remaster_name": "Caldera Oni / Snow Oni / Island Oni",
+    "category": "creature",
+    "notes": "Yai → Oni"
+  },
+  {
+    "legacy_name": "Winter Wolf",
+    "remaster_name": "Witchwarg",
+    "category": "creature",
+    "notes": null
+  },
+  {
+    "legacy_name": "Align Ki",
+    "remaster_name": "Qi Center / Align Qi / Disrupt Qi",
+    "category": "feat",
+    "notes": "Monk (Ki→Qi)"
+  },
+  {
+    "legacy_name": "Burrow Elocutionist",
+    "remaster_name": "Animal Elocutionist",
+    "category": "feat",
+    "notes": "Gnome"
+  },
+  {
+    "legacy_name": "Celestial Eyes",
+    "remaster_name": "Nephilim Eyes / Lore / Resistance",
+    "category": "feat",
+    "notes": "Aasimar→Nephilim"
+  },
+  {
+    "legacy_name": "Channeled Succor",
+    "remaster_name": "Restorative Channel",
+    "category": "feat",
+    "notes": "Cleric"
+  },
+  {
+    "legacy_name": "Combat Reflexes",
+    "remaster_name": "Tactical Reflexes",
+    "category": "feat",
+    "notes": "Fighter"
+  },
+  {
+    "legacy_name": "Deflect Arrow",
+    "remaster_name": "Deflect Projectile",
+    "category": "feat",
+    "notes": "Monk"
+  },
+  {
+    "legacy_name": "Disrupt Ki",
+    "remaster_name": "Qi Center / Align Qi / Disrupt Qi",
+    "category": "feat",
+    "notes": "Monk (Ki→Qi)"
+  },
+  {
+    "legacy_name": "Favored Enemy",
+    "remaster_name": "Favored Prey",
+    "category": "feat",
+    "notes": "Ranger"
+  },
+  {
+    "legacy_name": "Hatchling Flight",
+    "remaster_name": "Winglet Flight",
+    "category": "feat",
+    "notes": "Kobold"
+  },
+  {
+    "legacy_name": "Inspire Courage",
+    "remaster_name": "Courageous Anthem",
+    "category": "feat",
+    "notes": "Bard composition"
+  },
+  {
+    "legacy_name": "Inspire Defense",
+    "remaster_name": "Rallying Anthem",
+    "category": "feat",
+    "notes": "Bard composition"
+  },
+  {
+    "legacy_name": "Inspire Heroics",
+    "remaster_name": "Fortissimo Composition",
+    "category": "feat",
+    "notes": "Bard composition"
+  },
+  {
+    "legacy_name": "Ki Center",
+    "remaster_name": "Qi Center / Align Qi / Disrupt Qi",
+    "category": "feat",
+    "notes": "Monk (Ki→Qi)"
+  },
+  {
+    "legacy_name": "Knockdown",
+    "remaster_name": "Slam Down",
+    "category": "feat",
+    "notes": "Fighter"
+  },
+  {
+    "legacy_name": "Lore",
+    "remaster_name": "Nephilim Eyes / Lore / Resistance",
+    "category": "feat",
+    "notes": "Aasimar→Nephilim"
+  },
+  {
+    "legacy_name": "Power Attack",
+    "remaster_name": "Vicious Swing",
+    "category": "feat",
+    "notes": "Fighter"
+  },
+  {
+    "legacy_name": "Resistance",
+    "remaster_name": "Nephilim Eyes / Lore / Resistance",
+    "category": "feat",
+    "notes": "Aasimar→Nephilim"
+  },
+  {
+    "legacy_name": "Sense Evil",
+    "remaster_name": "Sense Unholiness / Sense Holiness",
+    "category": "feat",
+    "notes": "Champion"
+  },
+  {
+    "legacy_name": "Sense Good",
+    "remaster_name": "Sense Unholiness / Sense Holiness",
+    "category": "feat",
+    "notes": "Champion"
+  },
+  {
+    "legacy_name": "Spring Attack",
+    "remaster_name": "Dashing Strike",
+    "category": "feat",
+    "notes": "Fighter"
+  },
+  {
+    "legacy_name": "Stunning Fist",
+    "remaster_name": "Stunning Blows",
+    "category": "feat",
+    "notes": "Monk"
+  },
+  {
+    "legacy_name": "Turn Undead",
+    "remaster_name": "Panic the Dead",
+    "category": "feat",
+    "notes": "Cleric"
+  },
+  {
+    "legacy_name": "Wholeness of Body",
+    "remaster_name": "Harmonize Self",
+    "category": "feat",
+    "notes": "Monk"
+  },
+  {
+    "legacy_name": "Wild Shape",
+    "remaster_name": "Untamed Form",
+    "category": "feat",
+    "notes": "Druid"
+  },
+  {
+    "legacy_name": "Woodland Stride",
+    "remaster_name": "Forest Passage",
+    "category": "feat",
+    "notes": "Druid"
+  },
+  {
+    "legacy_name": "Bag of Holding",
+    "remaster_name": "Spacious Pouch (Type I–IV)",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Boots of Speed",
+    "remaster_name": "Propulsive Boots",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Bracers of Armor",
+    "remaster_name": "Bands of Force",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Celestial Armor",
+    "remaster_name": "Holy Chain",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Darkwood",
+    "remaster_name": "Duskwood",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Demon Armor",
+    "remaster_name": "Unholy Plate",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Everburning Torch",
+    "remaster_name": "Everlight Crystal",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Flame Tongue",
+    "remaster_name": "Searing Blade",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Holy Avenger",
+    "remaster_name": "Chalice of Justice",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Mithral",
+    "remaster_name": "Dawnsilver",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Portable Hole",
+    "remaster_name": "Planar Tunnel",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Sovereign Glue",
+    "remaster_name": "Everlasting Adhesive",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Sunrod",
+    "remaster_name": "Glow Rod",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Tindertwig",
+    "remaster_name": "Matchstick",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Universal Solvent",
+    "remaster_name": "Absolute Solvent (Lesser)",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Winged Boots",
+    "remaster_name": "Winged Sandals",
+    "category": "item",
+    "notes": null
+  },
+  {
+    "legacy_name": "Abyssal",
+    "remaster_name": "Chthonian",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Aquan",
+    "remaster_name": "Thalassic",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Auran",
+    "remaster_name": "Sussuran",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Celestial",
+    "remaster_name": "Empyrean",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Druidic",
+    "remaster_name": "Wildsong",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Ignan",
+    "remaster_name": "Pyric",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Infernal",
+    "remaster_name": "Diabolic",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Sylvan",
+    "remaster_name": "Fey",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Terran",
+    "remaster_name": "Petran",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Undercommon",
+    "remaster_name": "Sakvroth",
+    "category": "language",
+    "notes": null
+  },
+  {
+    "legacy_name": "Delirium",
+    "remaster_name": "Disorientation",
+    "category": "pantheon",
+    "notes": "domain"
+  },
+  {
+    "legacy_name": "Dwarven Pantheon",
+    "remaster_name": "Stone's Blood",
+    "category": "pantheon",
+    "notes": "pantheon"
+  },
+  {
+    "legacy_name": "Elven Pantheon",
+    "remaster_name": "Sovyrian Conclave",
+    "category": "pantheon",
+    "notes": "pantheon"
+  },
+  {
+    "legacy_name": "Followers of Fate",
+    "remaster_name": "Norns",
+    "category": "pantheon",
+    "notes": "pantheon"
+  },
+  {
+    "legacy_name": "The Prismatic Ray",
+    "remaster_name": "Radiant Prism",
+    "category": "pantheon",
+    "notes": "pantheon"
+  },
+  {
+    "legacy_name": "Void",
+    "remaster_name": "Nothingness",
+    "category": "pantheon",
+    "notes": "domain"
+  },
+  {
+    "legacy_name": "Wyrmkin",
+    "remaster_name": "Dragon",
+    "category": "pantheon",
+    "notes": "domain"
+  },
+  {
+    "legacy_name": "Animate Dead",
+    "remaster_name": "Summon Undead",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Barkskin",
+    "remaster_name": "Oaken Resilience",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Bind Soul",
+    "remaster_name": "Seize Soul",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Burning Hands",
+    "remaster_name": "Breathe Fire",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Calm Emotions",
+    "remaster_name": "Calm",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Chill Touch",
+    "remaster_name": "Void Warp",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Cloudkill",
+    "remaster_name": "Toxic Cloud",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Color Spray",
+    "remaster_name": "Dizzying Colors",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Comprehend Language",
+    "remaster_name": "Translate",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Continual Flame",
+    "remaster_name": "Everlight",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Dimension Door",
+    "remaster_name": "Translocate",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "False Life",
+    "remaster_name": "False Vitality",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Feather Fall",
+    "remaster_name": "Gentle Landing",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Feeblemind",
+    "remaster_name": "Never Mind",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Finger of Death",
+    "remaster_name": "Execute",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Flesh to Stone",
+    "remaster_name": "Petrify",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Floating Disk",
+    "remaster_name": "Carryall",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Freedom of Movement",
+    "remaster_name": "Unfettered Movement",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Glibness",
+    "remaster_name": "Honeyed Words",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Globe of Invulnerability",
+    "remaster_name": "Dispelling Globe",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Goodberry",
+    "remaster_name": "Cornucopia",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Heroes' Feast",
+    "remaster_name": "Fortifying Brew",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Hideous Laughter",
+    "remaster_name": "Laughing Fit",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Horrid Wilting",
+    "remaster_name": "Desiccate",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Hypnotic Pattern",
+    "remaster_name": "Hypnotize",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Mage Armor",
+    "remaster_name": "Mystic Armor",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Magic Fang",
+    "remaster_name": "Runic Body",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Magic Missile",
+    "remaster_name": "Force Barrage",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Magic Weapon",
+    "remaster_name": "Runic Weapon",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Magnificent Mansion",
+    "remaster_name": "Planar Palace",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Meteor Swarm",
+    "remaster_name": "Falling Stars",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Mind Blank",
+    "remaster_name": "Hidden Mind",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Modify Memory",
+    "remaster_name": "Rewrite Memory",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Pass Without Trace",
+    "remaster_name": "Vanishing Tracks",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Plane Shift",
+    "remaster_name": "Interplanar Teleport",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Quivering Palm",
+    "remaster_name": "Touch of Death",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Resilient Sphere",
+    "remaster_name": "Containment",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Scorching Ray",
+    "remaster_name": "Blazing Bolt",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Searing Light",
+    "remaster_name": "Holy Light",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "See Invisibility",
+    "remaster_name": "See the Unseen",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Simulacrum",
+    "remaster_name": "Shadow Double",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Spider Climb",
+    "remaster_name": "Gecko Grip",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Stoneskin",
+    "remaster_name": "Mountain Resilience",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Time Stop",
+    "remaster_name": "Freeze Time",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Tongues",
+    "remaster_name": "Truespeech",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Touch of Idiocy",
+    "remaster_name": "Stupefy",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Tree Stride",
+    "remaster_name": "Nature's Pathway",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "True Strike",
+    "remaster_name": "Sure Strike",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Trueseeing",
+    "remaster_name": "Truesight",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Vampiric Touch",
+    "remaster_name": "Vampiric Feast",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Wail of the Banshee",
+    "remaster_name": "Wails of the Damned",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Zone of Truth",
+    "remaster_name": "Ring of Truth",
+    "category": "spell",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Abjuration",
+    "remaster_name": "Staff of Protection",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Conjuration",
+    "remaster_name": "Staff of Summoning",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Divination",
+    "remaster_name": "Staff of the Unblinking Eye",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Enchantment",
+    "remaster_name": "Staff of Control",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Evocation",
+    "remaster_name": "Staff of Elemental Power",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Illusion",
+    "remaster_name": "Staff of Phantasms",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Necromancy",
+    "remaster_name": "Staff of the Dead",
+    "category": "staff",
+    "notes": null
+  },
+  {
+    "legacy_name": "Staff of Transmutation",
+    "remaster_name": "Fluid Form Staff",
+    "category": "staff",
+    "notes": null
+  }
+]

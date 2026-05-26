@@ -1,0 +1,641 @@
+[
+  {
+    "miracle": "Creation: light from darkness",
+    "reference": "Gen 1:3",
+    "book": "Pentateuch",
+    "spell_name": "Light cantrip (heightened) / Sunburst (rank 7)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Sunburst for cosmogonic scale"
+  },
+  {
+    "miracle": "Flood (Noah)",
+    "reference": "Gen 7",
+    "book": "Pentateuch",
+    "spell_name": "Tsunami (rank 9)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Primal-only; under approach #1 fold into Divine deity-spell"
+  },
+  {
+    "miracle": "Confusion of tongues at Babel",
+    "reference": "Gen 11:7",
+    "book": "Pentateuch",
+    "spell_name": "Confusion (rank 4) + reverse Tongues",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": null
+  },
+  {
+    "miracle": "Burning bush",
+    "reference": "Ex 3:2",
+    "book": "Pentateuch",
+    "spell_name": "Holy Light (champion feat) + Sending",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Bush \"burned but was not consumed\" — non-damaging flame"
+  },
+  {
+    "miracle": "Moses' staff to snake",
+    "reference": "Ex 4:3, 7:10",
+    "book": "Pentateuch",
+    "spell_name": "Animate Object (rank 4) / Polymorph",
+    "tradition": "Arcane, Occult, Primal",
+    "sanctification": "either",
+    "notes": "No clean Divine equivalent; flavor as deity-spell. Egyptian magicians' staves are the demonic counter (Acts 8 / Simon Magus parallel)"
+  },
+  {
+    "miracle": "Plague of blood (Nile)",
+    "reference": "Ex 7:20",
+    "book": "Pentateuch",
+    "spell_name": "homebrew \"Plague of Blood\" (rank 5 Divine)",
+    "tradition": "—",
+    "sanctification": "—",
+    "notes": "Closest existing: Putrefy Food and Drink + Disrupting Weapons"
+  },
+  {
+    "miracle": "Plague of frogs",
+    "reference": "Ex 8:6",
+    "book": "Pentateuch",
+    "spell_name": "Summon Animal (rank 1+, frogs)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Heightened for sheer numbers"
+  },
+  {
+    "miracle": "Plague of flies / lice / locusts",
+    "reference": "Ex 8:16, 8:24, 10:13",
+    "book": "Pentateuch",
+    "spell_name": "Insect Swarm (rank 3+)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Direct fit"
+  },
+  {
+    "miracle": "Plague of darkness (3 days)",
+    "reference": "Ex 10:21",
+    "book": "Pentateuch",
+    "spell_name": "Darkness (heightened) / Mind Shroud",
+    "tradition": "Arcane, Divine, Occult",
+    "sanctification": "Unholy or Holy",
+    "notes": "Darkness is sanctified-Unholy in Remaster — theologically awkward since YHWH-sourced. Reframe as Divine deity-spell"
+  },
+  {
+    "miracle": "Death of firstborn (Passover)",
+    "reference": "Ex 12:29",
+    "book": "Pentateuch",
+    "spell_name": "Slay Living (rank 5) / homebrew \"Angel of Death's Passover\" (rank 8 ritual)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy/Unholy",
+    "notes": "Single-target → spell; area → custom ritual"
+  },
+  {
+    "miracle": "Parting of the Red Sea",
+    "reference": "Ex 14:21",
+    "book": "Pentateuch",
+    "spell_name": "Wall of Water (rank 3) + Control Water (rank 5)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Primal-only; under approach #1 fold into Divine deity-spell"
+  },
+  {
+    "miracle": "Pillar of cloud / pillar of fire",
+    "reference": "Ex 13:21",
+    "book": "Pentateuch",
+    "spell_name": "homebrew \"Shekinah Pillar\" ritual",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Continuous Obscuring Mist by day, Continual Flame + Light by night"
+  },
+  {
+    "miracle": "Manna from heaven",
+    "reference": "Ex 16",
+    "book": "Pentateuch",
+    "spell_name": "Create Food (rank 2, heightened)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Direct fit"
+  },
+  {
+    "miracle": "Water from the rock",
+    "reference": "Ex 17:6, Num 20:11",
+    "book": "Pentateuch",
+    "spell_name": "Create Water (heightened) / homebrew \"Smite the Rock\"",
+    "tradition": "Divine, Primal",
+    "sanctification": "either",
+    "notes": null
+  },
+  {
+    "miracle": "Mount Sinai theophany",
+    "reference": "Ex 19:16-19",
+    "book": "Pentateuch",
+    "spell_name": "Storm of Vengeance (rank 9) + Earthquake (rank 8)",
+    "tradition": "Primal",
+    "sanctification": "Holy",
+    "notes": "Both Primal-only — major theological friction; see § \"Tradition friction\""
+  },
+  {
+    "miracle": "Aaron's budding rod",
+    "reference": "Num 17:8",
+    "book": "Pentateuch",
+    "spell_name": "Tree (heightened) / Plant Form",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": null
+  },
+  {
+    "miracle": "Brazen serpent (heal-by-looking)",
+    "reference": "Num 21:9",
+    "book": "Pentateuch",
+    "spell_name": "Heal (rank 1+, area-burst variant 3)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Christ's John 3:14 typology pre-figures Heal heightened to cure poison"
+  },
+  {
+    "miracle": "Korah swallowed by earth",
+    "reference": "Num 16:32",
+    "book": "Pentateuch",
+    "spell_name": "Earthquake (rank 8, targeted)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Same Primal friction as Sinai"
+  },
+  {
+    "miracle": "Balaam's donkey speaks",
+    "reference": "Num 22:28",
+    "book": "Pentateuch",
+    "spell_name": "Tongues (cast on donkey)",
+    "tradition": "Divine, Occult, Primal",
+    "sanctification": "either",
+    "notes": null
+  },
+  {
+    "miracle": "Jordan parts for Joshua",
+    "reference": "Josh 3:16",
+    "book": "Joshua-Judges",
+    "spell_name": "Control Water (rank 5)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Same as Red Sea, smaller scale"
+  },
+  {
+    "miracle": "Walls of Jericho fall",
+    "reference": "Josh 6:20",
+    "book": "Joshua-Judges",
+    "spell_name": "homebrew \"Trumpet of Jericho\" (rank 7 Divine ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Sonic damage to structures, 7-day buildup"
+  },
+  {
+    "miracle": "Sun stands still",
+    "reference": "Josh 10:13",
+    "book": "Joshua-Judges",
+    "spell_name": "homebrew \"Stand Still, Sun\" (rank 10 Divine)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Cosmologically extreme"
+  },
+  {
+    "miracle": "Gideon's fleece (sign-test)",
+    "reference": "Judg 6:36-40",
+    "book": "Joshua-Judges",
+    "spell_name": "Augury (rank 2 ritual) / Commune (rank 5)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Fleece is the focus component"
+  },
+  {
+    "miracle": "Gideon's torches (300 men)",
+    "reference": "Judg 7:20",
+    "book": "Joshua-Judges",
+    "spell_name": "Fear (rank 1, heightened mass)",
+    "tradition": "Occult, Primal",
+    "sanctification": "either",
+    "notes": "The 32k-vs-300 rout"
+  },
+  {
+    "miracle": "Samson's strength",
+    "reference": "Judg 14:6, 16:29",
+    "book": "Joshua-Judges",
+    "spell_name": "Enlarge + Heroism / Champion focus power \"Spirit of the LORD comes mightily\"",
+    "tradition": "Arcane, Divine",
+    "sanctification": "Holy",
+    "notes": "Burst Strength tied to Nazirite vow"
+  },
+  {
+    "miracle": "Deborah's prophecy",
+    "reference": "Judg 4:6-7",
+    "book": "Joshua-Judges",
+    "spell_name": "Augury + Foresight (rank 9)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Oracle / Prophet class fit per class-ancestry-reskin-verdicts"
+  },
+  {
+    "miracle": "Elijah's fire from heaven (Carmel)",
+    "reference": "1 Kgs 18:38",
+    "book": "Kings-Prophets",
+    "spell_name": "Holy Light (champion feat, rank 10) / Divine Wrath (rank 4) / Fireball via deity domain",
+    "tradition": "Divine (feat) / Arcane-Primal (Fireball)",
+    "sanctification": "Holy",
+    "notes": "Flagship example. Fireball is Arcane/Primal — not Divine. Either champion feat Holy Light or grant Fireball via YHWH deity domain (Sarenrae precedent — see yhwh-deity-template)"
+  },
+  {
+    "miracle": "Elijah's drought",
+    "reference": "1 Kgs 17:1",
+    "book": "Kings-Prophets",
+    "spell_name": "Control Weather (rank 7)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Multi-year — heighten / extend ritual"
+  },
+  {
+    "miracle": "Elijah feeds widow (oil)",
+    "reference": "1 Kgs 17:14",
+    "book": "Kings-Prophets",
+    "spell_name": "Create Food + Heroes' Feast (rank 6)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": null
+  },
+  {
+    "miracle": "Elijah raises widow's son",
+    "reference": "1 Kgs 17:22",
+    "book": "Kings-Prophets",
+    "spell_name": "Raise Dead (rank 6 ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Ritual not spell — important for \"miracle vs magic\" distinction (rituals = petition, spells = technique)"
+  },
+  {
+    "miracle": "Elijah's whirlwind / chariot",
+    "reference": "2 Kgs 2:11",
+    "book": "Kings-Prophets",
+    "spell_name": "Translocate / Plane Shift (rank 7) + Storm of Vengeance",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Plane Shift to \"Heaven\" via fiery chariot mount"
+  },
+  {
+    "miracle": "Elisha's bears (curse)",
+    "reference": "2 Kgs 2:24",
+    "book": "Kings-Prophets",
+    "spell_name": "Summon Animal (bears, rank 5) + Bane",
+    "tradition": "Primal, Divine",
+    "sanctification": "Unholy or Holy",
+    "notes": "Theologically awkward — flag for denominational-lens-decision"
+  },
+  {
+    "miracle": "Elisha's axe-head floats",
+    "reference": "2 Kgs 6:6",
+    "book": "Kings-Prophets",
+    "spell_name": "Floating Disk + Telekinetic Hand",
+    "tradition": "Arcane, Occult",
+    "sanctification": "either",
+    "notes": "Closest mechanical fit; flavor as Divine miracle"
+  },
+  {
+    "miracle": "Elisha's blinding of Aramean army",
+    "reference": "2 Kgs 6:18",
+    "book": "Kings-Prophets",
+    "spell_name": "Blindness (rank 3, area) + Mass Suggestion",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": null
+  },
+  {
+    "miracle": "Naaman healed of leprosy",
+    "reference": "2 Kgs 5:14",
+    "book": "Kings-Prophets",
+    "spell_name": "Cleanse Affliction (rank 2 ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Ritual form preserves \"go wash 7 times\" sequence. Cleanse Affliction is the Remaster rename of Remove Disease per pf2e-remaster-name-mapping in sister topic"
+  },
+  {
+    "miracle": "Daniel in lion's den",
+    "reference": "Dan 6:22",
+    "book": "Kings-Prophets",
+    "spell_name": "Calm (rank 2) + Sanctuary (rank 1)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Sanctuary prevents attack; Calm keeps lions docile"
+  },
+  {
+    "miracle": "Three in fiery furnace",
+    "reference": "Dan 3:25-27",
+    "book": "Kings-Prophets",
+    "spell_name": "Fire Shield (rank 4) + Resist Energy + Spiritual Guardian",
+    "tradition": "Divine, Arcane, Primal",
+    "sanctification": "Holy",
+    "notes": "\"Fourth man\" = Spiritual Guardian / Angel Form"
+  },
+  {
+    "miracle": "Belshazzar's writing on wall",
+    "reference": "Dan 5:5",
+    "book": "Kings-Prophets",
+    "spell_name": "Illusory Object + Telekinetic Hand / homebrew \"Hand of YHWH\"",
+    "tradition": "Arcane, Occult",
+    "sanctification": "Holy",
+    "notes": "Glowing Divine hand writes"
+  },
+  {
+    "miracle": "Daniel's beast visions",
+    "reference": "Dan 7-8",
+    "book": "Kings-Prophets",
+    "spell_name": "Dream Council (rank 8) / Vision of Death",
+    "tradition": "Occult, Divine",
+    "sanctification": "Holy",
+    "notes": "Apocalyptic dreams = Occult tradition fits"
+  },
+  {
+    "miracle": "Jonah swallowed by fish",
+    "reference": "Jon 1:17",
+    "book": "Kings-Prophets",
+    "spell_name": "Summon Animal (whale, rank 9) + Endure",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": null
+  },
+  {
+    "miracle": "Hezekiah's sundial reverses",
+    "reference": "2 Kgs 20:11",
+    "book": "Kings-Prophets",
+    "spell_name": "Time Beacon (rank 7) / Reverse Time (rank 8)",
+    "tradition": "Arcane, Occult",
+    "sanctification": "Holy",
+    "notes": "Cosmological-tier; same friction as \"sun stands still\""
+  },
+  {
+    "miracle": "Isaiah's coal on lips",
+    "reference": "Isa 6:6-7",
+    "book": "Kings-Prophets",
+    "spell_name": "Cleanse Affliction + Bless",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Cleansing + commissioning"
+  },
+  {
+    "miracle": "Ezekiel's wheels (vision)",
+    "reference": "Ez 1",
+    "book": "Kings-Prophets",
+    "spell_name": "Phantasmal Vision + Foresight",
+    "tradition": "Occult",
+    "sanctification": "Holy",
+    "notes": "Pure vision-effect"
+  },
+  {
+    "miracle": "Ezekiel's dry bones",
+    "reference": "Ez 37:7-10",
+    "book": "Kings-Prophets",
+    "spell_name": "Resurrect (rank 10 ritual, mass)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Animate Dead is Unholy-flavored — friction; use Resurrect mass-version"
+  },
+  {
+    "miracle": "Habakkuk's air-transport",
+    "reference": "Bel & Dragon 33-39 (deuterocanon)",
+    "book": "Kings-Prophets",
+    "spell_name": "Translocate (rank 5)",
+    "tradition": "Divine, Arcane, Occult",
+    "sanctification": "Holy",
+    "notes": "Apocryphal; parallels Acts 8 Philip"
+  },
+  {
+    "miracle": "Water to wine (Cana)",
+    "reference": "Jn 2:9",
+    "book": "Gospels",
+    "spell_name": "homebrew \"Transmute Liquid\" (rank 3 Divine)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "No direct Remaster fit; closest is Purify Food and Drink in reverse"
+  },
+  {
+    "miracle": "Walking on water",
+    "reference": "Mt 14:25",
+    "book": "Gospels",
+    "spell_name": "Water Walk (rank 2) / Air Walk (rank 4)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": null
+  },
+  {
+    "miracle": "Calming the storm",
+    "reference": "Mk 4:39",
+    "book": "Gospels",
+    "spell_name": "homebrew \"Peace, Be Still\" (rank 5 Divine, instant)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Control Weather is ritual — too slow"
+  },
+  {
+    "miracle": "Multiplication of loaves",
+    "reference": "Mt 14:19",
+    "book": "Gospels",
+    "spell_name": "Heroes' Feast (rank 6) + Create Food heightened",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": null
+  },
+  {
+    "miracle": "Healing the blind",
+    "reference": "Mk 8:25",
+    "book": "Gospels",
+    "spell_name": "Restore Senses (rank 2)",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Direct fit"
+  },
+  {
+    "miracle": "Healing the deaf / mute",
+    "reference": "Mk 7:35",
+    "book": "Gospels",
+    "spell_name": "Restore Senses / Cleanse Affliction",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Direct fit"
+  },
+  {
+    "miracle": "Healing the lame / paralytic",
+    "reference": "Mk 2:11",
+    "book": "Gospels",
+    "spell_name": "Heal (rank 3+) / Cleanse Affliction",
+    "tradition": "Divine, Primal",
+    "sanctification": "Holy",
+    "notes": "Heal removes paralyzed at sufficient rank"
+  },
+  {
+    "miracle": "Healing leper",
+    "reference": "Mk 1:41",
+    "book": "Gospels",
+    "spell_name": "Cleanse Affliction (rank 2 ritual or focus)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Same as Naaman"
+  },
+  {
+    "miracle": "Casting out demons",
+    "reference": "Mk 5:13",
+    "book": "Gospels",
+    "spell_name": "Banishment (rank 5) / Holy Light",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Sends back to original plane — fits \"into the swine\" / \"out into the abyss\""
+  },
+  {
+    "miracle": "Raising Jairus's daughter",
+    "reference": "Mk 5:41",
+    "book": "Gospels",
+    "spell_name": "Raise Dead (rank 6 ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Standard Raise Dead — recently dead"
+  },
+  {
+    "miracle": "Raising Lazarus",
+    "reference": "Jn 11:43",
+    "book": "Gospels",
+    "spell_name": "Resurrect (rank 10 ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Four days dead — only Resurrect handles that timeline"
+  },
+  {
+    "miracle": "Transfiguration",
+    "reference": "Mt 17:2",
+    "book": "Gospels",
+    "spell_name": "Angel Form (rank 7) + Holy Light + Glorify",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Glorified-body manifestation"
+  },
+  {
+    "miracle": "Triumphal entry (donkey known)",
+    "reference": "Mt 21:2",
+    "book": "Gospels",
+    "spell_name": "Augury + Speak with Animals",
+    "tradition": "Divine, Occult, Primal",
+    "sanctification": "Holy",
+    "notes": "Foreknowledge spell"
+  },
+  {
+    "miracle": "Cursing the fig tree",
+    "reference": "Mk 11:14",
+    "book": "Gospels",
+    "spell_name": "Blight (rank 4)",
+    "tradition": "Primal",
+    "sanctification": "either",
+    "notes": "Theologically awkward — Primal/un-sanctified; flag"
+  },
+  {
+    "miracle": "Resurrection of Christ",
+    "reference": "Mt 28:6",
+    "book": "Gospels",
+    "spell_name": "Beyond any spell — narrative event",
+    "tradition": "—",
+    "sanctification": "Holy",
+    "notes": "One-time divine intervention (Aquinas's \"first-degree miracle\" — surpasses nature absolutely; see 2026-05-25-aquinas-summa-q95-q96-divination-magic). GM fiat / metaplot, not castable"
+  },
+  {
+    "miracle": "Ascension",
+    "reference": "Acts 1:9",
+    "book": "Gospels",
+    "spell_name": "Plane Shift (rank 7) / homebrew \"Glorious Body Translation\"",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Cf. Elijah"
+  },
+  {
+    "miracle": "Pentecost (tongues of fire)",
+    "reference": "Acts 2:3",
+    "book": "Acts",
+    "spell_name": "Tongues (rank 5, area) + Holy Light",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Tongues is the foundational charism (1 Cor 12) — see 2026-05-24-magic-theology-problem-charismata-1-corinthians-12"
+  },
+  {
+    "miracle": "Peter's shadow heals",
+    "reference": "Acts 5:15",
+    "book": "Acts",
+    "spell_name": "homebrew \"Apostolic Shadow\" focus / Sanctified Ground + Heal aura",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Champion-style aura focus power"
+  },
+  {
+    "miracle": "Paul's handkerchiefs heal",
+    "reference": "Acts 19:12",
+    "book": "Acts",
+    "spell_name": "Talisman of Healing (item) / Healer's Gloves",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Item-based, not spell"
+  },
+  {
+    "miracle": "Philip transported (Azotus)",
+    "reference": "Acts 8:39",
+    "book": "Acts",
+    "spell_name": "Translocate (rank 5)",
+    "tradition": "Divine, Arcane, Occult",
+    "sanctification": "Holy",
+    "notes": "Direct fit"
+  },
+  {
+    "miracle": "Cornelius's vision",
+    "reference": "Acts 10:3",
+    "book": "Acts",
+    "spell_name": "Sending + Augury",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Cross-distance message"
+  },
+  {
+    "miracle": "Damascus road (Saul→Paul)",
+    "reference": "Acts 9:3-9",
+    "book": "Acts",
+    "spell_name": "Holy Light + Blindness (rank 3) + Sending",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Light burst, blinding, voice-message"
+  },
+  {
+    "miracle": "Eutychus raised",
+    "reference": "Acts 20:10",
+    "book": "Acts",
+    "spell_name": "Raise Dead (rank 6 ritual)",
+    "tradition": "Divine",
+    "sanctification": "Holy",
+    "notes": "Direct"
+  },
+  {
+    "miracle": "Peter freed by angel",
+    "reference": "Acts 12:7",
+    "book": "Acts",
+    "spell_name": "Translocate + Knock (rank 2) on chains",
+    "tradition": "Divine, Arcane, Occult",
+    "sanctification": "Holy",
+    "notes": "Or Angel Form messenger"
+  },
+  {
+    "miracle": "Ananias and Sapphira",
+    "reference": "Acts 5:5",
+    "book": "Acts",
+    "spell_name": "Slay Living (rank 5)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy/Unholy",
+    "notes": "Theologically Holy though mechanically Unholy-coded — friction; see § Tradition friction"
+  },
+  {
+    "miracle": "Elymas blinded",
+    "reference": "Acts 13:11",
+    "book": "Acts",
+    "spell_name": "Blindness (rank 3, targeted)",
+    "tradition": "Divine, Occult",
+    "sanctification": "Holy",
+    "notes": "Direct fit; Paul's curse"
+  }
+]

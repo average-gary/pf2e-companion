@@ -1,0 +1,14 @@
+# Tauri / Rust
+pf2e-companion/src-tauri/target/
+pf2e-companion/src-tauri/gen/
+target/                      # rust-analyzer cache when opened above the workspace
+
+# Node
+pf2e-companion/node_modules/
+pf2e-companion/.svelte-kit/
+pf2e-companion/build/
+pf2e-companion/dist/
+
+# OS
+.DS_Store
+*.swp

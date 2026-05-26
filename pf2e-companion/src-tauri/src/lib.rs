@@ -1,0 +1,72 @@
+//! pf2e-companion — Tauri 2 backend.
+//!
+//! Phase 0 scaffold:
+//! 1. SQLite + FTS5 + sqlite-vec (loaded as a runtime extension).
+//! 2. Schema migration on startup (see `db::SCHEMA_V1`).
+//! 3. Vault watcher (notify-rs) — logs events; ingest in Phase 1.
+//! 4. IPC: `search`, `list_entities`, `schema_version`.
+//! 5. One smoke-test fixture seeded so `search("Hosts")` returns a row.
+//!
+//! Each subsequent phase fills in the rest of the spec at
+//! `~/wiki/topics/pf2e-worldbuilding-tool/output/plan-cross-platform-pf2e-biblical-reference-2026-05-25.md`.
+
+mod commands;
+mod db;
+mod foundry;
+mod rules;
+mod vault;
+
+use std::sync::Arc;
+use tauri::Manager;
+
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "info,pf2e_companion_lib=debug".into()),
+        )
+        .try_init()
+        .ok();
+
+    tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
+        .setup(|app| {
+            // App-data directory (per-platform; resolves correctly on iOS/Android too).
+            let app_data = app
+                .path()
+                .app_data_dir()
+                .expect("app data dir resolvable");
+            std::fs::create_dir_all(&app_data).ok();
+
+            let db_path = app_data.join("index.db");
+            let db = db::Db::open(&db_path)?;
+            db.seed_smoke_fixture()?;
+            db.seed_reference_data()?;
+
+            let db_arc = Arc::new(db);
+            app.manage(db_arc.clone());
+
+            let vault_root = app_data.join("vault");
+            if let Err(e) = vault::spawn(vault_root, db_arc.clone()) {
+                tracing::error!(error = %e, "failed to start vault watcher");
+            }
+
+            tracing::info!(db = %db_path.display(), "pf2e-companion ready");
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            commands::search,
+            commands::list_entities,
+            commands::schema_version,
+            commands::lookup_alias,
+            commands::lookup_miracle,
+            commands::xp_budget,
+            commands::creature_xp,
+            commands::validate_statblock,
+            commands::list_lenses,
+            commands::import_foundry_pack,
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
