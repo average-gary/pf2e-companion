@@ -5,6 +5,7 @@
   import { marked } from "marked";
   import { getEntity, type EntityDetail } from "$lib/ipc";
   import Statblock from "$lib/Statblock.svelte";
+  import Sources from "$lib/Sources.svelte";
 
   let entity = $state<EntityDetail | null>(null);
   let loading = $state(true);
@@ -82,14 +83,7 @@
       {/if}
 
       {#if sources().length}
-        <section class="sources">
-          <h4>Sources</h4>
-          <ul>
-            {#each sources() as src (src)}
-              <li>{src}</li>
-            {/each}
-          </ul>
-        </section>
+        <Sources sources={sources()} />
       {/if}
     </div>
   </article>
@@ -220,26 +214,5 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-  .sources {
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 0.7rem 0.9rem;
-    background: var(--bg-soft);
-  }
-  .sources h4 {
-    margin: 0 0 0.4rem;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  .sources ul {
-    margin: 0;
-    padding-left: 1rem;
-    font-size: 0.78rem;
-    line-height: 1.4;
-    color: var(--muted);
   }
 </style>

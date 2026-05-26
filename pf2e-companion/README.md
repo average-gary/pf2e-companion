@@ -86,6 +86,16 @@ test schema_migrates_seeds_and_searches ... ok
 - **Phase 7** — Foundry export round-trip + plugin SDK.
 - **Phase 8** — App-store submission + signing pipeline.
 
+## Content provenance
+
+Every entity ships a `sources:` array citing the wiki article it was authored
+from plus a Bible reference or doctrinal primary source. The in-app `/about`
+page explains the citation conventions, the design discipline (the DragonRaid
+trap), and the four license-provenance badges. The research wiki itself lives
+at `~/wiki/topics/pf2e-biblical-reskin/` and `~/wiki/topics/pf2e-worldbuilding-tool/`
+on the maintainer's machine — PRs that update wiki sources should flow into
+content-pack updates the same way the Phase 5 lens packs were authored.
+
 ## Develop
 
 Prerequisites: Rust 1.77+, Node 20+, pnpm. Python 3 for the seed extractor.

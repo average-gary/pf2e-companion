@@ -21,8 +21,9 @@
 
 <div class="app">
   <header class="topbar">
-    <span class="brand">pf2e-companion</span>
+    <a class="brand" href="/" aria-label="Home">pf2e-companion</a>
     <div class="pickers">
+      <a class="about-link" href="/about" title="About this app">About</a>
       <label class="picker">
         <span>Campaign</span>
         <select
@@ -106,6 +107,21 @@
   .brand {
     font-weight: 600;
     font-size: 0.95rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .about-link {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    line-height: 1;
+  }
+  .about-link:hover {
+    color: inherit;
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
   }
   .pickers {
     display: flex;
