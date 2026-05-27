@@ -46,6 +46,14 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **CI matrix** at `.github/workflows/build.yml`: cargo test on macOS first; then a 4-target desktop matrix (macOS arm64 + x86_64, Linux x86_64, Windows x86_64), iOS cross-compile sanity, and Android debug APK build. All build-only — signing is Phase 8.
 - **What still needs a real device session**: iOS Simulator + Android Emulator hands-on UX shake-down, TestFlight + Play internal track upload, signing certificates.
 
+### Phase 6 § C — RAG over the bundled content (done)
+- **`entities_vec` lit up.** `src-tauri/src/rag.rs` chunks each reference entity by paragraph (≈150-500 token target via a char-count proxy), embeds via the active provider, and writes float[768] vectors keyed by rowid. `embeddings_meta` (new in schema v3) carries the (entity_id, chunk_idx, chunk_text, provider, model) tuple.
+- **Hybrid search** rewrites `commands::search` to delegate to `rag::hybrid_search`, which fuses FTS5 and vector hits via reciprocal-rank fusion (RRF, k=60). When the LLM provider isn't configured or the corpus isn't indexed, it transparently falls back to FTS-only — the IPC contract is unchanged.
+- **`/settings/llm` reindex card.** New "Reindex content" button calls the `rag_reindex` IPC; status row shows `entities × chunks` indexed plus the provider/model lineage.
+- **Search UI** now badges hits as `vec` (semantic-only) or `fts+vec` (both retrievers).
+- **Embeddings posture**: Anthropic doesn't ship an embedding API, so reindexing requires Ollama. The error message tells the user to switch providers + pull `nomic-embed-text` (or any 768-dim embedder) before retrying.
+- **5-test phase6_c.rs** with a deterministic in-process `FakeEmbedder` provider exercises the full embed → vector-search → RRF fusion path on a 3-entry mini corpus, plus FTS-fallback semantics and re-embed idempotency.
+
 ### Phase 6 § B — LLM provider scaffolding (done)
 - **Off by default, BYO key.** No provider runs at startup. Configure at `/settings/llm`.
 - **Two providers behind a single trait** (`src-tauri/src/llm.rs`): `AnthropicProvider` (SSE on `/v1/messages`) and `OllamaProvider` (NDJSON on `/api/chat` + `/api/embeddings`). Anthropic does not provide embeddings — its `embed()` errors; RAG indexing in Stage C uses Ollama for the embed half.
@@ -90,7 +98,6 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 6 § C** — RAG over bundled content (hybrid FTS + vector, RRF fusion).
 - **Phase 6 § D** — Tool-use loop wiring the PF2e validators as agent tools, plus Anthropic prompt caching for the canon.
 - **Phase 7** — Foundry export round-trip + plugin SDK.
 - **Phase 8** — App-store submission + signing pipeline.

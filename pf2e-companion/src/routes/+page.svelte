@@ -105,7 +105,12 @@
         <header>
           <span class="type">{hit.type}</span>
           <h2>{hit.title}</h2>
-          <span class="score">{hit.score.toFixed(2)}</span>
+          {#if hit.source === "both" || hit.source === "vec"}
+            <span class="src" data-source={hit.source} title="Retrieval source">
+              {hit.source === "both" ? "fts+vec" : "vec"}
+            </span>
+          {/if}
+          <span class="score">{hit.score.toFixed(3)}</span>
         </header>
         <p class="snippet">{@html hit.snippet}</p>
       </a>
@@ -241,6 +246,23 @@
     font-size: 0.7rem;
     font-variant-numeric: tabular-nums;
     color: var(--muted);
+  }
+  .src {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .src[data-source="vec"] {
+    background: color-mix(in srgb, hsl(220 80% 50%) 12%, transparent);
+    border-color: color-mix(in srgb, hsl(220 80% 50%) 35%, var(--line));
+  }
+  .src[data-source="both"] {
+    background: color-mix(in srgb, hsl(140 60% 45%) 12%, transparent);
+    border-color: color-mix(in srgb, hsl(140 60% 45%) 35%, var(--line));
   }
   .snippet {
     margin: 0.4rem 0 0;

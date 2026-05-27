@@ -12,10 +12,11 @@
 
 mod commands;
 mod content;
-mod db;
+pub mod db;
 mod foundry;
 mod keystore;
 pub mod llm;
+pub mod rag;
 mod rules;
 mod vault;
 mod vault_write;
@@ -91,6 +92,8 @@ pub fn run() {
             commands::llm_configure,
             commands::llm_clear_config,
             commands::llm_chat,
+            commands::rag_index_stats,
+            commands::rag_reindex,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

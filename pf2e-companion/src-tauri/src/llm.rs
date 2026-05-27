@@ -190,6 +190,21 @@ impl LlmRegistry {
             .as_ref()
             .map(|a| a.config.provider)
     }
+
+    /// Inject a custom provider directly. Used by integration tests to
+    /// exercise the embed/chat plumbing without making real HTTP calls.
+    /// The associated `LlmConfig` reports whatever kind/model the caller
+    /// passes — `current_kind()` will return it verbatim, so tests that
+    /// need the Ollama branch in `rag::vector_search` can advertise as
+    /// Ollama while being backed by a fake.
+    pub async fn install_provider(
+        &self,
+        config: LlmConfig,
+        provider: Box<dyn LlmProvider>,
+    ) {
+        let mut g = self.inner.write().await;
+        *g = Some(ActiveProvider { config, provider });
+    }
 }
 
 impl ActiveProvider {

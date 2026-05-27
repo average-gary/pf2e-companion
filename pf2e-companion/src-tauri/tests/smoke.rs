@@ -19,11 +19,11 @@ fn schema_migrates_seeds_and_searches() {
 
     let conn = conn_db.conn.lock().unwrap();
 
-    // Schema bumped to v2 in Phase 1 (added `book` column to miracle_spell_map).
+    // Schema bumped to v3 in Phase 6 § C (added `embeddings_meta` table).
     let v: i64 = conn
         .query_row("SELECT MAX(version) FROM schema_version", [], |r| r.get(0))
         .unwrap();
-    assert_eq!(v, 2, "schema_version row should be 2");
+    assert_eq!(v, 3, "schema_version row should be 3");
 
     // FTS index returns the smoke fixture for "Hosts".
     let mut stmt = conn

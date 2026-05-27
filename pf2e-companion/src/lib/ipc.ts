@@ -7,6 +7,23 @@ export interface SearchHit {
   type: string;
   snippet: string;
   score: number;
+  /** "fts" | "vec" | "both" — which retriever surfaced this hit (Phase 6 § C). */
+  source: string;
+}
+
+export interface RagIndexStats {
+  indexed: boolean;
+  entities: number;
+  chunks: number;
+  provider: string | null;
+  model: string | null;
+}
+
+export interface RagEmbedReport {
+  provider: string;
+  model: string;
+  entities_processed: number;
+  chunks_embedded: number;
 }
 
 export interface EntitySummary {
@@ -232,3 +249,9 @@ export const llmChat = (
       max_tokens: opts.maxTokens ?? null,
     },
   });
+
+// === Phase 6 § C — RAG ====================================================
+
+export const ragIndexStats = () => invoke<RagIndexStats>("rag_index_stats");
+
+export const ragReindex = () => invoke<RagEmbedReport>("rag_reindex");

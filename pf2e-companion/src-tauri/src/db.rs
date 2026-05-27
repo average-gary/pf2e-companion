@@ -257,8 +257,23 @@ CREATE TABLE IF NOT EXISTS settings (
 CREATE INDEX IF NOT EXISTS idx_alias_remaster ON remaster_aliases(remaster_name);
 CREATE INDEX IF NOT EXISTS idx_alias_category ON remaster_aliases(category);
 
+-- Phase 6 § C: per-chunk metadata for `entities_vec`. The vec0 virtual
+-- table holds only the float[768] embedding; we keep the (entity_id,
+-- chunk_idx, chunk_text, provider, model) tuple here, joined on rowid.
+CREATE TABLE IF NOT EXISTS embeddings_meta (
+    rowid       INTEGER PRIMARY KEY,
+    entity_id   TEXT NOT NULL,
+    chunk_idx   INTEGER NOT NULL,
+    chunk_text  TEXT NOT NULL,
+    provider    TEXT NOT NULL,
+    model       TEXT NOT NULL,
+    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_embeddings_entity   ON embeddings_meta(entity_id);
+CREATE INDEX IF NOT EXISTS idx_embeddings_provider ON embeddings_meta(provider, model);
+
 CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY
 );
-INSERT OR IGNORE INTO schema_version (version) VALUES (2);
+INSERT OR IGNORE INTO schema_version (version) VALUES (3);
 "#;

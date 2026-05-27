@@ -6,6 +6,7 @@ use crate::db::Db;
 use crate::foundry::{self, ImportReport, LicensePosture};
 use crate::keystore;
 use crate::llm::{self, ChatChunk, ChatOpts, LlmConfig, LlmRegistry, LlmStatus, Message};
+use crate::rag;
 use crate::rules::{self, Difficulty};
 use crate::vault_write::{
     self, Campaign, CrudResult, EntityInput, EntityPatch, RelationRow, VaultRoot,
@@ -20,60 +21,21 @@ use tauri::Emitter;
 use uuid::Uuid;
 use tauri::State;
 
-#[derive(Serialize, Debug)]
-pub struct SearchHit {
-    pub id: String,
-    pub title: String,
-    pub r#type: String,
-    pub snippet: String,
-    pub score: f64,
-}
-
-/// Hybrid search. Phase 0 = FTS5 only; vector path lights up in Phase 6 when
-/// the LLM layer is wired (see plan § 4.2).
+/// Hybrid search. Delegates to `rag::hybrid_search` which fuses FTS5 and
+/// vector retrieval via reciprocal-rank fusion when the LLM provider is
+/// configured AND the corpus has been indexed; otherwise transparently
+/// falls back to FTS-only.
 #[tauri::command]
-pub fn search(
+pub async fn search(
     query: String,
     lens: Option<String>,
     db: State<'_, Arc<Db>>,
-) -> Result<Vec<SearchHit>, String> {
-    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<Vec<rag::HybridHit>, String> {
     let lens = lens.unwrap_or_else(|| "lewisian".to_string());
-
-    let mut stmt = conn
-        .prepare(
-            r#"
-            SELECT
-                e.id,
-                json_extract(e.frontmatter, '$.title') AS title,
-                e.type,
-                snippet(entities_fts, 1, '<mark>', '</mark>', '...', 12) AS snippet,
-                bm25(entities_fts) AS score
-            FROM entities_fts
-            JOIN entities e ON e.rowid = entities_fts.rowid
-            WHERE entities_fts MATCH ?1
-              AND (e.lens IS NULL OR e.lens = ?2)
-            ORDER BY score
-            LIMIT 50
-            "#,
-        )
-        .map_err(|e| e.to_string())?;
-
-    let rows = stmt
-        .query_map(params![query, lens], |row| {
-            Ok(SearchHit {
-                id: row.get(0)?,
-                title: row.get::<_, Option<String>>(1)?.unwrap_or_default(),
-                r#type: row.get(2)?,
-                snippet: row.get(3)?,
-                score: row.get(4)?,
-            })
-        })
-        .map_err(|e| e.to_string())?
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())?;
-
-    Ok(rows)
+    rag::hybrid_search(&db, &llm, &query, &lens)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[derive(Serialize, Debug)]
@@ -623,6 +585,67 @@ pub async fn llm_chat(
     });
 
     Ok(session_id)
+}
+
+// === Phase 6 § C — RAG (corpus embedding + index stats) ===================
+
+#[derive(Serialize, Debug, Clone)]
+pub struct RagIndexStats {
+    pub indexed: bool,
+    pub entities: i64,
+    pub chunks: i64,
+    pub provider: Option<String>,
+    pub model: Option<String>,
+}
+
+#[tauri::command]
+pub fn rag_index_stats(db: State<'_, Arc<Db>>) -> Result<RagIndexStats, String> {
+    let conn = db.conn.lock().map_err(|e| e.to_string())?;
+    let chunks: i64 = conn
+        .query_row("SELECT COUNT(*) FROM embeddings_meta", [], |r| r.get(0))
+        .map_err(|e| e.to_string())?;
+    if chunks == 0 {
+        return Ok(RagIndexStats {
+            indexed: false,
+            entities: 0,
+            chunks: 0,
+            provider: None,
+            model: None,
+        });
+    }
+    let entities: i64 = conn
+        .query_row(
+            "SELECT COUNT(DISTINCT entity_id) FROM embeddings_meta",
+            [],
+            |r| r.get(0),
+        )
+        .map_err(|e| e.to_string())?;
+    let (provider, model): (Option<String>, Option<String>) = conn
+        .query_row(
+            "SELECT provider, model FROM embeddings_meta LIMIT 1",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .map_err(|e| e.to_string())?;
+    Ok(RagIndexStats {
+        indexed: true,
+        entities,
+        chunks,
+        provider,
+        model,
+    })
+}
+
+/// (Re)embed the bundled content corpus with the active provider's
+/// embedding model. Wipes prior vectors first. Long-running.
+#[tauri::command]
+pub async fn rag_reindex(
+    db: State<'_, Arc<Db>>,
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<rag::EmbedReport, String> {
+    rag::embed_corpus(&db, &llm)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// The 5 v1 lens packs. Phase 1 returns the manifest; the actual content

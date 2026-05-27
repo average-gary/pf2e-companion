@@ -4,7 +4,11 @@
   import {
     llmConfigure,
     llmClearConfig,
+    ragIndexStats,
+    ragReindex,
     type LlmProviderKind,
+    type RagIndexStats,
+    type RagEmbedReport,
   } from "$lib/ipc";
   import { llmState, refreshLlmStatus } from "$lib/llm.svelte";
 
@@ -16,13 +20,43 @@
   let savedAt = $state<number | null>(null);
   let error = $state<string | null>(null);
 
+  let indexStats = $state<RagIndexStats | null>(null);
+  let reindexing = $state(false);
+  let lastReindex = $state<RagEmbedReport | null>(null);
+  let reindexError = $state<string | null>(null);
+
   onMount(async () => {
     await refreshLlmStatus();
     if (llmState.status?.configured) {
       provider = (llmState.status.provider ?? "ollama") as LlmProviderKind;
       model = llmState.status.model ?? defaultModelFor(provider);
     }
+    await refreshIndexStats();
   });
+
+  async function refreshIndexStats() {
+    try {
+      indexStats = await ragIndexStats();
+    } catch (e) {
+      indexStats = null;
+      reindexError = String(e);
+    }
+  }
+
+  async function doReindex() {
+    if (reindexing) return;
+    reindexing = true;
+    reindexError = null;
+    lastReindex = null;
+    try {
+      lastReindex = await ragReindex();
+      await refreshIndexStats();
+    } catch (e) {
+      reindexError = String(e);
+    } finally {
+      reindexing = false;
+    }
+  }
 
   function defaultModelFor(p: LlmProviderKind): string {
     return p === "anthropic" ? "claude-sonnet-4-6" : "qwen3:4b";
@@ -198,6 +232,59 @@
     <a href="/chat">Open chat →</a>
   </p>
 {/if}
+
+<section class="rag">
+  <h2>Content index (RAG)</h2>
+  <p class="rag-blurb">
+    Indexing chunks each lens-pack entry, embeds it via the configured
+    provider, and stores the vectors in the bundled sqlite-vec database.
+    Search then fuses keyword (FTS5) and semantic (vector) results — so
+    paraphrased queries like <em>"fire from heaven"</em> can surface
+    Elijah-on-Carmel even when the entry uses different wording.
+    Indexing is local-only (Ollama embeddings; Anthropic doesn't ship an
+    embedding API).
+  </p>
+  {#if indexStats}
+    {#if indexStats.indexed}
+      <p class="rag-status">
+        Indexed: <strong>{indexStats.entities}</strong> entities,
+        <strong>{indexStats.chunks}</strong> chunks via
+        <code>{indexStats.provider}</code> /
+        <code>{indexStats.model}</code>.
+      </p>
+    {:else}
+      <p class="rag-status muted">Not indexed yet — search uses FTS only.</p>
+    {/if}
+  {/if}
+  <div class="rag-actions">
+    <button
+      type="button"
+      class="primary"
+      onclick={doReindex}
+      disabled={reindexing || !llmState.status?.configured}
+    >
+      {reindexing
+        ? "Indexing… (this can take a few minutes)"
+        : indexStats?.indexed
+          ? "Reindex content"
+          : "Index content"}
+    </button>
+    {#if !llmState.status?.configured}
+      <span class="muted">Configure a provider above first.</span>
+    {/if}
+  </div>
+  {#if lastReindex}
+    <p class="ok">
+      Indexed {lastReindex.entities_processed} entities ·
+      {lastReindex.chunks_embedded} chunks ·
+      <code>{lastReindex.provider}</code> /
+      <code>{lastReindex.model}</code>.
+    </p>
+  {/if}
+  {#if reindexError}
+    <p class="err">{reindexError}</p>
+  {/if}
+</section>
 
 <style>
   .hero {
@@ -378,5 +465,61 @@
     text-decoration: underline;
     text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
     margin-left: 0.4rem;
+  }
+
+  .rag {
+    margin-top: 1.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .rag h2 {
+    margin: 0 0 0.4rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .rag-blurb {
+    margin: 0.4rem 0 0.6rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .rag-status {
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+  }
+  .rag-status.muted {
+    color: var(--muted);
+  }
+  .muted {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .rag-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+  }
+  .rag-actions button {
+    font: inherit;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
+    color: inherit;
+    cursor: pointer;
+  }
+  .rag-actions button.primary {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+    font-weight: 500;
+  }
+  .rag-actions button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 </style>
