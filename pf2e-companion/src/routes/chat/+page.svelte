@@ -8,11 +8,34 @@
   } from "$lib/llm.svelte";
   import { lensState } from "$lib/lens.svelte";
 
-  let messages = $state<ChatMessage[]>([]);
+  /** Tool-call trace bound to the assistant turn that issued it. */
+  type ToolTrace = {
+    id: string;
+    name: string;
+    input: unknown;
+    /** undefined while the call is still running. */
+    result?: unknown;
+    error?: boolean;
+  };
+
+  /** UI message shape — extends the wire ChatMessage with a per-turn trace. */
+  type UiMessage = ChatMessage & { traces?: ToolTrace[] };
+
+  let messages = $state<UiMessage[]>([]);
   let draft = $state("");
   let streaming = $state(false);
   let error = $state<string | null>(null);
-  let lastUsage = $state<{ input?: number; output?: number } | null>(null);
+  let lastUsage = $state<
+    | {
+        input?: number;
+        output?: number;
+        cacheRead?: number;
+        cacheCreated?: number;
+        iterations?: number;
+      }
+    | null
+  >(null);
+  let showContext = $state(true);
   let unlisten: (() => void) | null = null;
 
   onMount(refreshLlmStatus);
@@ -25,6 +48,14 @@
     return [
       `You are a helpful PF2e Remaster + Christian Biblical worldview reference assistant.`,
       `The user's active denominational lens is: ${lensState.active}.`,
+      ``,
+      `Tools available:`,
+      `- xp_budget(party_size, difficulty) — encounter XP budget`,
+      `- search(query, lens?) — hybrid FTS + vector search over the bundled lens content`,
+      `- lookup_alias(name) — legacy → Remaster name table`,
+      `- lookup_miracle(query) — biblical miracle → spell map`,
+      `- validate_statblock(statblock) — sanctification + license-provenance checks`,
+      `Use them when they help — for example, call search() before claiming a doctrine appears in a lens, and xp_budget() before sizing an encounter.`,
       ``,
       `Important constraints:`,
       `- Do NOT require real-world prayer or piety as a mechanical input. The Jesus Prayer triggers on a spell action, not on the player saying it aloud.`,
@@ -41,50 +72,82 @@
       return;
     }
 
-    const userMessage: ChatMessage = { role: "user", content: draft.trim() };
+    const userMessage: UiMessage = { role: "user", content: draft.trim() };
     messages = [...messages, userMessage];
     draft = "";
     error = null;
     lastUsage = null;
     streaming = true;
 
-    // Open the assistant slot.
+    // Open the assistant slot. Strip the UI-only `traces` field before
+    // sending the conversation upstream.
     const assistantIdx = messages.length;
-    messages = [...messages, { role: "assistant", content: "" }];
+    messages = [...messages, { role: "assistant", content: "", traces: [] }];
 
     try {
-      const sessionId = await llmChat(messages.slice(0, -1), {
+      const wire: ChatMessage[] = messages
+        .slice(0, -1)
+        .map(({ role, content }) => ({ role, content }));
+      const sessionId = await llmChat(wire, {
         system: buildSystem(),
         temperature: 0.6,
         maxTokens: 1024,
+        cacheSystem: llmState.status?.provider === "anthropic",
       });
 
       unlisten?.();
       unlisten = await subscribeToSession(sessionId, (ev) => {
-        if (ev.error) {
-          error = ev.error;
-          streaming = false;
-          unlisten?.();
-          unlisten = null;
-          return;
-        }
-        if (ev.token) {
-          messages = messages.map((m, i) =>
-            i === assistantIdx
-              ? { ...m, content: m.content + ev.token }
-              : m,
-          );
-        }
-        if (ev.done) {
-          streaming = false;
-          if (ev.input_tokens || ev.output_tokens) {
+        switch (ev.kind) {
+          case "token":
+            messages = messages.map((m, i) =>
+              i === assistantIdx ? { ...m, content: m.content + ev.token } : m,
+            );
+            break;
+          case "tool_start":
+            messages = messages.map((m, i) =>
+              i === assistantIdx
+                ? {
+                    ...m,
+                    traces: [
+                      ...(m.traces ?? []),
+                      { id: ev.id, name: ev.name, input: ev.input },
+                    ],
+                  }
+                : m,
+            );
+            break;
+          case "tool_result":
+            messages = messages.map((m, i) =>
+              i === assistantIdx
+                ? {
+                    ...m,
+                    traces: (m.traces ?? []).map((t) =>
+                      t.id === ev.id
+                        ? { ...t, result: ev.result, error: ev.error }
+                        : t,
+                    ),
+                  }
+                : m,
+            );
+            break;
+          case "done":
+            streaming = false;
             lastUsage = {
               input: ev.input_tokens ?? undefined,
               output: ev.output_tokens ?? undefined,
+              cacheRead: ev.cache_read_input_tokens ?? undefined,
+              cacheCreated: ev.cache_creation_input_tokens ?? undefined,
+              iterations: ev.iterations,
             };
-          }
-          unlisten?.();
-          unlisten = null;
+            unlisten?.();
+            unlisten = null;
+            break;
+          case "error":
+            error = ev.message;
+            streaming = false;
+            unlisten?.();
+            unlisten = null;
+            break;
         }
       });
     } catch (e) {
@@ -100,6 +163,15 @@
     messages = [];
     error = null;
     lastUsage = null;
+  }
+
+  function summarizeInput(v: unknown): string {
+    try {
+      const s = JSON.stringify(v);
+      return s.length > 80 ? s.slice(0, 77) + "…" : s;
+    } catch {
+      return String(v);
+    }
   }
 </script>
 
@@ -131,6 +203,24 @@
   {#each messages as m, i (i)}
     <div class="msg" data-role={m.role}>
       <div class="role">{m.role}</div>
+      {#if m.role === "assistant" && m.traces && m.traces.length > 0 && showContext}
+        <ul class="traces">
+          {#each m.traces as t (t.id)}
+            <li class="trace" data-status={t.error ? "error" : t.result === undefined ? "pending" : "ok"}>
+              <details>
+                <summary>
+                  <span class="tname">{t.name}</span>
+                  <span class="targs">{summarizeInput(t.input)}</span>
+                  <span class="tstatus">
+                    {#if t.error}error{:else if t.result === undefined}calling…{:else}ok{/if}
+                  </span>
+                </summary>
+                <pre class="tresult">{JSON.stringify(t.result ?? t.input, null, 2)}</pre>
+              </details>
+            </li>
+          {/each}
+        </ul>
+      {/if}
       <div class="content">{m.content || (streaming && i === messages.length - 1 ? "…" : "")}</div>
     </div>
   {:else}
@@ -142,6 +232,13 @@
     </p>
   {/each}
 </section>
+
+{#if messages.some((m) => m.traces && m.traces.length > 0)}
+  <label class="show-context">
+    <input type="checkbox" bind:checked={showContext} />
+    Show context (tool calls)
+  </label>
+{/if}
 
 {#if error}
   <p class="err">{error}</p>
@@ -176,6 +273,12 @@
     {#if lastUsage}
       <span class="usage">
         in {lastUsage.input ?? "?"} / out {lastUsage.output ?? "?"} tokens
+        {#if lastUsage.iterations && lastUsage.iterations > 1}
+          · {lastUsage.iterations} turns
+        {/if}
+        {#if lastUsage.cacheRead}
+          · cache hit {lastUsage.cacheRead}
+        {/if}
       </span>
     {/if}
   </div>
@@ -257,6 +360,82 @@
     padding: 1.5rem 1rem;
     border: 1px dashed var(--line);
     border-radius: 12px;
+  }
+  .traces {
+    list-style: none;
+    margin: 0.2rem 0 0.45rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .trace {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg-soft);
+    font-size: 0.78rem;
+  }
+  .trace[data-status="pending"] {
+    border-color: color-mix(in srgb, hsl(45 85% 50%) 35%, var(--line));
+  }
+  .trace[data-status="error"] {
+    border-color: color-mix(in srgb, hsl(0 65% 50%) 35%, var(--line));
+  }
+  .trace summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.35rem 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .trace summary::-webkit-details-marker {
+    display: none;
+  }
+  .tname {
+    font-weight: 500;
+    font-family:
+      ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .targs {
+    color: var(--muted);
+    font-family:
+      ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .tstatus {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .trace[data-status="error"] .tstatus {
+    color: #c33;
+  }
+  .tresult {
+    margin: 0;
+    padding: 0.55rem 0.7rem;
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    font-family:
+      ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    max-height: 14rem;
+    overflow: auto;
+  }
+  .show-context {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin: -0.4rem 0 0.8rem;
   }
   .empty em {
     color: inherit;

@@ -5,14 +5,14 @@
 use crate::db::Db;
 use crate::foundry::{self, ImportReport, LicensePosture};
 use crate::keystore;
-use crate::llm::{self, ChatChunk, ChatOpts, LlmConfig, LlmRegistry, LlmStatus, Message};
+use crate::llm::{self, LlmConfig, LlmRegistry, LlmStatus, Message};
+use crate::llm_tools::{self, AgentEvent};
 use crate::rag;
 use crate::rules::{self, Difficulty};
 use crate::vault_write::{
     self, Campaign, CrudResult, EntityInput, EntityPatch, RelationRow, VaultRoot,
 };
 use anyhow::Result;
-use futures_util::StreamExt;
 use rusqlite::params;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -465,14 +465,39 @@ pub async fn llm_clear_config(
     Ok(llm.status(false).await)
 }
 
+/// Frontend-facing event payload. Tokens, tool starts, tool results, and
+/// the final usage summary all flow through the same channel; UI
+/// discriminates on `kind`.
+#[derive(Serialize, Debug, Clone)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum LlmTokenEventPayload {
+    Token { token: String },
+    ToolStart {
+        id: String,
+        name: String,
+        input: serde_json::Value,
+    },
+    ToolResult {
+        id: String,
+        name: String,
+        result: serde_json::Value,
+        error: bool,
+    },
+    Done {
+        input_tokens: Option<u32>,
+        output_tokens: Option<u32>,
+        cache_read_input_tokens: Option<u32>,
+        cache_creation_input_tokens: Option<u32>,
+        iterations: usize,
+    },
+    Error { message: String },
+}
+
 #[derive(Serialize, Debug, Clone)]
 pub struct LlmTokenEvent {
     pub session_id: String,
-    pub token: Option<String>,
-    pub done: bool,
-    pub error: Option<String>,
-    pub input_tokens: Option<u32>,
-    pub output_tokens: Option<u32>,
+    #[serde(flatten)]
+    pub payload: LlmTokenEventPayload,
 }
 
 #[derive(serde::Deserialize, Debug)]
@@ -484,102 +509,82 @@ pub struct LlmChatRequest {
     pub temperature: Option<f32>,
     #[serde(default)]
     pub max_tokens: Option<u32>,
+    /// Opt-in to Anthropic prompt caching for the system block. The
+    /// chat page sets this true once the system prompt is stable for
+    /// the session.
+    #[serde(default)]
+    pub cache_system: bool,
 }
 
-/// Stream a chat response. Returns immediately with a session id; tokens
-/// arrive as `llm:token` events keyed by that id.
+/// Stream a chat response through the agent loop. Returns immediately
+/// with a session id; events arrive on `llm:token` keyed by that id.
+/// Each event is one of: `token`, `tool_start`, `tool_result`, `done`,
+/// `error` (see `LlmTokenEventPayload`).
 #[tauri::command]
 pub async fn llm_chat(
     request: LlmChatRequest,
     app: tauri::AppHandle,
+    db: State<'_, Arc<Db>>,
     llm: State<'_, Arc<LlmRegistry>>,
 ) -> Result<String, String> {
     let session_id = Uuid::new_v4().to_string();
-    let opts = ChatOpts {
-        max_tokens: request.max_tokens,
-        temperature: request.temperature,
-        system: request.system,
-    };
-
     let session = session_id.clone();
-    let session_for_err = session_id.clone();
     let app_clone = app.clone();
-    let llm_arc = llm.inner().clone();
+    let db_arc = (*db).clone();
+    let llm_arc = (*llm).clone();
     let messages = request.messages;
+    let system = request.system.unwrap_or_default();
 
     tokio::spawn(async move {
-        // Acquire the provider stream synchronously *while holding* the
-        // read-guard, then drop the guard before consuming the stream
-        // — provider.chat() returns a future that must complete before
-        // streaming can begin.
-        let stream_result = {
-            let guard = llm_arc.read().await;
-            match guard.as_ref() {
-                Some(active) => active.provider().chat(messages, opts).await,
-                None => Err(anyhow::anyhow!("llm provider not configured")),
-            }
-        };
+        let mut rx = llm_tools::run_agent(
+            db_arc,
+            llm_arc,
+            messages,
+            system,
+            request.cache_system,
+            request.temperature,
+            request.max_tokens,
+        );
 
-        let mut stream = match stream_result {
-            Ok(s) => s,
-            Err(e) => {
-                let _ = app.emit(
-                    "llm:token",
-                    LlmTokenEvent {
-                        session_id: session_for_err,
-                        token: None,
-                        done: true,
-                        error: Some(e.to_string()),
-                        input_tokens: None,
-                        output_tokens: None,
-                    },
-                );
+        while let Some(item) = rx.recv().await {
+            let payload = match item {
+                Ok(AgentEvent::Text(t)) => LlmTokenEventPayload::Token { token: t },
+                Ok(AgentEvent::ToolStart { id, name, input }) => {
+                    LlmTokenEventPayload::ToolStart { id, name, input }
+                }
+                Ok(AgentEvent::ToolResult {
+                    id,
+                    name,
+                    result,
+                    error,
+                }) => LlmTokenEventPayload::ToolResult {
+                    id,
+                    name,
+                    result,
+                    error,
+                },
+                Ok(AgentEvent::End { usage, iterations }) => LlmTokenEventPayload::Done {
+                    input_tokens: usage.input_tokens,
+                    output_tokens: usage.output_tokens,
+                    cache_read_input_tokens: usage.cache_read_input_tokens,
+                    cache_creation_input_tokens: usage.cache_creation_input_tokens,
+                    iterations,
+                },
+                Err(e) => LlmTokenEventPayload::Error {
+                    message: e.to_string(),
+                },
+            };
+            let event = LlmTokenEvent {
+                session_id: session.clone(),
+                payload,
+            };
+            let is_terminal = matches!(
+                event.payload,
+                LlmTokenEventPayload::Done { .. } | LlmTokenEventPayload::Error { .. }
+            );
+            let _ = app_clone.emit("llm:token", event);
+            if is_terminal {
                 return;
-            }
-        };
-
-        while let Some(chunk_result) = stream.next().await {
-            match chunk_result {
-                Ok(ChatChunk::Text(token)) => {
-                    let _ = app_clone.emit(
-                        "llm:token",
-                        LlmTokenEvent {
-                            session_id: session.clone(),
-                            token: Some(token),
-                            done: false,
-                            error: None,
-                            input_tokens: None,
-                            output_tokens: None,
-                        },
-                    );
-                }
-                Ok(ChatChunk::End { usage }) => {
-                    let _ = app_clone.emit(
-                        "llm:token",
-                        LlmTokenEvent {
-                            session_id: session.clone(),
-                            token: None,
-                            done: true,
-                            error: None,
-                            input_tokens: usage.as_ref().and_then(|u| u.input_tokens),
-                            output_tokens: usage.as_ref().and_then(|u| u.output_tokens),
-                        },
-                    );
-                }
-                Err(e) => {
-                    let _ = app_clone.emit(
-                        "llm:token",
-                        LlmTokenEvent {
-                            session_id: session.clone(),
-                            token: None,
-                            done: true,
-                            error: Some(e.to_string()),
-                            input_tokens: None,
-                            output_tokens: None,
-                        },
-                    );
-                    return;
-                }
             }
         }
     });

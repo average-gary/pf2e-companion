@@ -30,6 +30,27 @@ pub mod ollama;
 pub struct Message {
     pub role: Role,
     pub content: String,
+    /// Tool-use plumbing (Stage D). For an Assistant message that issued
+    /// a tool call, `tool_calls` carries the (id, name, input) triples.
+    /// For a Tool message that returns a result, `tool_call_id` references
+    /// the matching assistant call. Both are optional — naked chat
+    /// messages leave them empty.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tool_calls: Vec<ToolCall>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tool_call_id: Option<String>,
+}
+
+impl Message {
+    /// Convenience constructor for the common case (just role + content).
+    pub fn new(role: Role, content: impl Into<String>) -> Self {
+        Self {
+            role,
+            content: content.into(),
+            tool_calls: Vec::new(),
+            tool_call_id: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
@@ -41,6 +62,27 @@ pub enum Role {
     Tool,
 }
 
+/// Schema declaration for a tool the agent loop exposes to the model.
+/// Provider impls translate this to their native format (Anthropic's
+/// `input_schema`, Ollama's `function.parameters`).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ToolSpec {
+    pub name: String,
+    pub description: String,
+    /// JSON-schema object describing the tool's input parameters.
+    pub input_schema: serde_json::Value,
+}
+
+/// A single tool invocation issued by the model. `input` is the raw
+/// JSON-decoded argument object (validated by the dispatch layer, not by
+/// the provider).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ToolCall {
+    pub id: String,
+    pub name: String,
+    pub input: serde_json::Value,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ChatOpts {
     /// Soft cap on tokens to generate (provider-specific defaults if None).
@@ -50,6 +92,18 @@ pub struct ChatOpts {
     /// Anthropic-only: a `system` prompt. Ollama folds this into
     /// `messages` upstream.
     pub system: Option<String>,
+    /// Tools the model is allowed to call. Empty = naked chat.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tools: Vec<ToolSpec>,
+    /// Anthropic prompt-caching opt-in. When true and `system` is set,
+    /// the system block is sent with `cache_control: ephemeral`. Ignored
+    /// on other providers.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub cache_system: bool,
+}
+
+fn is_false(b: &bool) -> bool {
+    !*b
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -57,6 +111,11 @@ pub struct ChatOpts {
 pub enum ChatChunk {
     /// A piece of assistant text. Concatenate to form the reply.
     Text(String),
+    /// A complete tool-call request from the model. Provider impls
+    /// buffer streaming JSON internally and emit one `ToolCall` per
+    /// finalized call (so the agent loop sees whole calls, never
+    /// fragments).
+    ToolCall(ToolCall),
     /// The model has stopped emitting tokens. Optionally carries a usage
     /// summary; providers report this differently.
     End {
@@ -68,6 +127,13 @@ pub enum ChatChunk {
 pub struct UsageSummary {
     pub input_tokens: Option<u32>,
     pub output_tokens: Option<u32>,
+    /// Anthropic prompt-caching telemetry. `cache_read` ≈ tokens served
+    /// from cache (cheap); `cache_creation` ≈ tokens added to cache this
+    /// turn. Both None on providers that don't expose the metric.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cache_read_input_tokens: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cache_creation_input_tokens: Option<u32>,
 }
 
 pub type ChatStream = BoxStream<'static, Result<ChatChunk>>;

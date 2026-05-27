@@ -215,14 +215,49 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface LlmTokenEvent {
-  session_id: string;
-  token: string | null;
-  done: boolean;
-  error: string | null;
-  input_tokens: number | null;
-  output_tokens: number | null;
-}
+/**
+ * Event payload streamed from the agent loop. Five variants:
+ *   - `token`        — assistant prose fragment
+ *   - `tool_start`   — model issued a tool call (UI may show spinner)
+ *   - `tool_result`  — tool result was appended to the conversation
+ *   - `done`         — final usage + iteration count
+ *   - `error`        — fatal error; no further events for this session
+ */
+export type LlmTokenEvent =
+  | {
+      session_id: string;
+      kind: "token";
+      token: string;
+    }
+  | {
+      session_id: string;
+      kind: "tool_start";
+      id: string;
+      name: string;
+      input: unknown;
+    }
+  | {
+      session_id: string;
+      kind: "tool_result";
+      id: string;
+      name: string;
+      result: unknown;
+      error: boolean;
+    }
+  | {
+      session_id: string;
+      kind: "done";
+      input_tokens: number | null;
+      output_tokens: number | null;
+      cache_read_input_tokens: number | null;
+      cache_creation_input_tokens: number | null;
+      iterations: number;
+    }
+  | {
+      session_id: string;
+      kind: "error";
+      message: string;
+    };
 
 export const llmStatus = () => invoke<LlmStatus>("llm_status");
 
@@ -239,6 +274,7 @@ export const llmChat = (
     system?: string | null;
     temperature?: number | null;
     maxTokens?: number | null;
+    cacheSystem?: boolean;
   } = {},
 ) =>
   invoke<string>("llm_chat", {
@@ -247,6 +283,7 @@ export const llmChat = (
       system: opts.system ?? null,
       temperature: opts.temperature ?? null,
       max_tokens: opts.maxTokens ?? null,
+      cache_system: opts.cacheSystem ?? false,
     },
   });
 

@@ -16,6 +16,7 @@ pub mod db;
 mod foundry;
 mod keystore;
 pub mod llm;
+pub mod llm_tools;
 pub mod rag;
 mod rules;
 mod vault;
