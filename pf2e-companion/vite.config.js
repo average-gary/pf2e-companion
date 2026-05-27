@@ -29,4 +29,14 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+
+  // Vitest config (`pnpm test`).
+  // Pure-TS unit tests live alongside source as `*.test.ts`.
+  // Skip Svelte-component tests for now — they need jsdom + Testing Library
+  // and the citation parser doesn't need a DOM.
+  test: {
+    include: ["src/**/*.test.ts"],
+    environment: "node",
+    globals: false,
+  },
 }));

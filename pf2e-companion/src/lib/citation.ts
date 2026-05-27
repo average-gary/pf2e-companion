@@ -186,7 +186,11 @@ function buildUrlRef(raw: string): Citation | null {
   const m = raw.match(URL_RE);
   if (!m) return null;
   // Use everything before the URL as the label, falling back to the host.
-  const before = raw.slice(0, m.index ?? 0).trim().replace(/[-—–:]\s*$/, "");
+  const before = raw
+    .slice(0, m.index ?? 0)
+    .trim()
+    .replace(/[-—–:]\s*$/, "")
+    .trim();
   let label = before;
   if (!label) {
     try {

@@ -13,7 +13,7 @@ env:
 
 jobs:
   test:
-    name: cargo test (Rust unit + integration)
+    name: tests (Rust + frontend)
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +35,14 @@ jobs:
       - name: pnpm install
         working-directory: pf2e-companion
         run: pnpm install --frozen-lockfile
+
+      - name: svelte-check
+        working-directory: pf2e-companion
+        run: pnpm check
+
+      - name: vitest (frontend unit tests)
+        working-directory: pf2e-companion
+        run: pnpm test
 
       - name: cargo test
         working-directory: pf2e-companion/src-tauri

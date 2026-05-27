@@ -108,7 +108,10 @@ pnpm tauri dev          # launches the app window with HMR
 # Re-extract seeds when the wiki reference articles change:
 python3 scripts/extract_seeds.py
 
-# Run the Rust test suite (15 tests, ~2s):
+# Run the frontend unit tests (Vitest, ~200ms):
+pnpm test
+
+# Run the Rust test suite (47 tests, ~2s):
 cd src-tauri && cargo test
 
 # Production build (no installer):
