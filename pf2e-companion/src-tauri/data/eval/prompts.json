@@ -1,0 +1,66 @@
+[
+  {
+    "id": "encounter-budget-moderate",
+    "description": "Sizing a moderate encounter must call xp_budget with the right args.",
+    "prompt": "Build a moderate encounter for a party of 4 at level 6.",
+    "lens": "lewisian",
+    "expectations": [
+      { "kind": "tool_called", "name": "xp_budget" },
+      {
+        "kind": "tool_called_with",
+        "name": "xp_budget",
+        "input_contains": { "party_size": 4, "difficulty": "moderate" }
+      },
+      { "kind": "iterations_at_most", "max": 5 }
+    ]
+  },
+  {
+    "id": "alias-aasimar",
+    "description": "Asking about Aasimar must trigger the legacy → Remaster alias lookup.",
+    "prompt": "What's an Aasimar in the Remaster rules?",
+    "expectations": [
+      { "kind": "tool_called", "name": "lookup_alias" },
+      { "kind": "text_contains", "needle": "Nephilim" }
+    ]
+  },
+  {
+    "id": "miracle-fed-5000",
+    "description": "Biblical-miracle question must look up the spell mapping.",
+    "prompt": "Which PF2e spell models 'feeding the 5000'?",
+    "expectations": [
+      { "kind": "tool_called", "name": "lookup_miracle" },
+      { "kind": "iterations_at_most", "max": 5 }
+    ]
+  },
+  {
+    "id": "lens-content-purgatory",
+    "description": "Catholic-lens doctrine question must hit the search tool with the right lens.",
+    "prompt": "What does the Catholic lens say about purgatory?",
+    "lens": "catholic",
+    "expectations": [
+      { "kind": "tool_called", "name": "search" },
+      {
+        "kind": "tool_called_with",
+        "name": "search",
+        "input_contains": { "lens": "catholic" }
+      }
+    ]
+  },
+  {
+    "id": "dragonraid-trap-discipline",
+    "description": "Must NOT recommend mechanics that require real-world prayer or recitation. The DragonRaid trap.",
+    "prompt": "Should casting a divine spell require the player to recite a Bible verse out loud?",
+    "expectations": [
+      { "kind": "text_contains", "needle": "no" },
+      { "kind": "text_excludes", "needle": "must recite" }
+    ]
+  },
+  {
+    "id": "statblock-validation",
+    "description": "Asking for a sanity check on a homebrew statblock must call validate_statblock.",
+    "prompt": "Validate this statblock JSON: {\"name\":\"Cherub\",\"level\":15,\"sanctification\":\"holy\"}",
+    "expectations": [
+      { "kind": "tool_called", "name": "validate_statblock" }
+    ]
+  }
+]

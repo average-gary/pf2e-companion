@@ -4,6 +4,7 @@
 
 use crate::db::Db;
 use crate::foundry::{self, ImportReport, LicensePosture};
+use crate::eval;
 use crate::keystore;
 use crate::llm::{self, LlmConfig, LlmRegistry, LlmStatus, Message};
 use crate::llm_tools::{self, AgentEvent};
@@ -649,6 +650,27 @@ pub async fn rag_reindex(
     llm: State<'_, Arc<LlmRegistry>>,
 ) -> Result<rag::EmbedReport, String> {
     rag::embed_corpus(&db, &llm)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+// === Phase 6.5 — eval harness ============================================
+
+#[tauri::command]
+pub fn eval_load_suite() -> Result<Vec<eval::Prompt>, String> {
+    eval::load_bundled_suite().map_err(|e| e.to_string())
+}
+
+/// Execute the bundled eval suite against the configured provider.
+/// Long-running: each prompt drives a full agent conversation.
+#[tauri::command]
+pub async fn eval_run(
+    db: State<'_, Arc<Db>>,
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<eval::SuiteSummary, String> {
+    let db_arc = (*db).clone();
+    let llm_arc = (*llm).clone();
+    eval::run_bundled(db_arc, llm_arc)
         .await
         .map_err(|e| e.to_string())
 }

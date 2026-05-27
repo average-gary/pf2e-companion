@@ -230,6 +230,7 @@
     Currently configured: <strong>{llmState.status.provider}</strong>
     · model <code>{llmState.status.model}</code>.
     <a href="/chat">Open chat →</a>
+    <a href="/settings/eval">Run eval suite →</a>
   </p>
 {/if}
 

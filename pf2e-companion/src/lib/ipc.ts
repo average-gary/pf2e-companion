@@ -292,3 +292,48 @@ export const llmChat = (
 export const ragIndexStats = () => invoke<RagIndexStats>("rag_index_stats");
 
 export const ragReindex = () => invoke<RagEmbedReport>("rag_reindex");
+
+// === Phase 6.5 — eval harness =============================================
+
+export type Expectation =
+  | { kind: "tool_called"; name: string }
+  | { kind: "tool_called_with"; name: string; input_contains: unknown }
+  | { kind: "text_contains"; needle: string }
+  | { kind: "text_excludes"; needle: string }
+  | { kind: "iterations_at_most"; max: number };
+
+export interface EvalPrompt {
+  id: string;
+  description: string;
+  prompt: string;
+  lens?: string | null;
+  system_extra?: string | null;
+  expectations: Expectation[];
+}
+
+export interface ToolCallSummary {
+  name: string;
+  input: unknown;
+}
+
+export interface RunResult {
+  id: string;
+  description: string;
+  passed: boolean;
+  failures: string[];
+  final_text: string;
+  tool_calls: ToolCallSummary[];
+  iterations: number;
+  error: string | null;
+}
+
+export interface SuiteSummary {
+  total: number;
+  passed: number;
+  failed: number;
+  results: RunResult[];
+}
+
+export const evalLoadSuite = () => invoke<EvalPrompt[]>("eval_load_suite");
+
+export const evalRun = () => invoke<SuiteSummary>("eval_run");

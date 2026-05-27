@@ -46,6 +46,13 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **CI matrix** at `.github/workflows/build.yml`: cargo test on macOS first; then a 4-target desktop matrix (macOS arm64 + x86_64, Linux x86_64, Windows x86_64), iOS cross-compile sanity, and Android debug APK build. All build-only — signing is Phase 8.
 - **What still needs a real device session**: iOS Simulator + Android Emulator hands-on UX shake-down, TestFlight + Play internal track upload, signing certificates.
 
+### Phase 6.5 — Eval harness (done)
+- **Bundled prompt suite** at `src-tauri/data/eval/prompts.json` — 6 starter cases covering tool-call coverage (xp_budget, lookup_alias, lookup_miracle, search-with-lens, validate_statblock) and the DragonRaid-trap discipline check.
+- **Tiny assertion DSL** in `src-tauri/src/eval.rs`: `tool_called`, `tool_called_with` (recursive JSON-superset match, case-insensitive on strings), `text_contains`, `text_excludes`, `iterations_at_most`. Adding a new check is a `match` arm + a `Variant` — kept narrow on purpose.
+- **Pure grading function** (`grade_one`) — a `RunRecord` plus a `Prompt` produces a `RunResult`. No I/O, deterministic. Heavy-lifting tests in `phase6_5.rs` exercise the grader against scripted agent runs without touching a live LLM.
+- **`/settings/eval` UI**: Run-suite button, color-coded per-prompt cards with PASS/FAIL badges, expandable run details (tool-call list + final text), top-of-page summary. Linked from `/settings/llm`.
+- **6-test phase6_5.rs**: bundled-suite shape, full pass with a "good agent", failure detection with a "bad agent", DragonRaid-trap honest/dishonest discrimination, JSON-contains nested matching, expectation serde round-trip.
+
 ### Phase 6 § D — Tool-use loop + agent surface (done)
 - **Agent loop** in `src-tauri/src/llm_tools.rs`: streams tokens to the UI, intercepts `ToolCall` chunks, executes locally, appends `Tool` messages, and recurses. Hard cap at 5 iterations.
 - **Five tools wired** off the existing Phase 1/6-§-C surfaces (no duplication): `xp_budget`, `validate_statblock`, `lookup_alias`, `lookup_miracle`, `search` (the hybrid one).
@@ -107,7 +114,6 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 6.5** — Eval harness for canon-faithfulness and statblock validity.
 - **Phase 7** — Foundry export round-trip + plugin SDK.
 - **Phase 8** — App-store submission + signing pipeline.
 
