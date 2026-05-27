@@ -14,6 +14,8 @@ mod commands;
 mod content;
 mod db;
 mod foundry;
+mod keystore;
+pub mod llm;
 mod rules;
 mod vault;
 mod vault_write;
@@ -50,6 +52,11 @@ pub fn run() {
             let db_arc = Arc::new(db);
             app.manage(db_arc.clone());
 
+            // Phase 6 § B — LLM is off by default. The registry is created
+            // unconfigured; `commands::llm_configure` populates it on user
+            // opt-in.
+            app.manage(Arc::new(llm::LlmRegistry::new()));
+
             let vault_root = app_data.join("vault");
             std::fs::create_dir_all(&vault_root).ok();
             app.manage(Arc::new(vault_write::VaultRoot(vault_root.clone())));
@@ -80,6 +87,10 @@ pub fn run() {
             commands::add_relation,
             commands::delete_relation,
             commands::list_relations,
+            commands::llm_status,
+            commands::llm_configure,
+            commands::llm_clear_config,
+            commands::llm_chat,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

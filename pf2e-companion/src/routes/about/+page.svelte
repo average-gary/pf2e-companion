@@ -188,6 +188,18 @@
     flavor and roleplay, not casting prerequisites. Theology is
     content, not a rules input.
   </p>
+  <p>
+    The same posture governs the optional LLM-assisted chat at
+    <a href="/chat">/chat</a>. The PF2e community is generally fine
+    with prose-drafting AI but wary of rules-touching AI, so the
+    feature is <strong>off by default, BYO key</strong>, hidden behind
+    <a href="/settings/llm">/settings/llm</a>, and never mentioned in
+    the first-launch flow. Local models (Ollama) keep everything on
+    your machine; cloud models (Anthropic) send prompts and the active
+    lens's content to the provider. Either way, verify rules-touching
+    outputs against canonical PF2e Remaster sources before bringing
+    them to the table.
+  </p>
 
   <h2 id="repo">Project</h2>
   <p>

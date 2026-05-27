@@ -4,15 +4,20 @@
 
 use crate::db::Db;
 use crate::foundry::{self, ImportReport, LicensePosture};
+use crate::keystore;
+use crate::llm::{self, ChatChunk, ChatOpts, LlmConfig, LlmRegistry, LlmStatus, Message};
 use crate::rules::{self, Difficulty};
 use crate::vault_write::{
     self, Campaign, CrudResult, EntityInput, EntityPatch, RelationRow, VaultRoot,
 };
 use anyhow::Result;
+use futures_util::StreamExt;
 use rusqlite::params;
 use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
+use tauri::Emitter;
+use uuid::Uuid;
 use tauri::State;
 
 #[derive(Serialize, Debug)]
@@ -443,6 +448,181 @@ pub fn list_relations(
     db: State<'_, Arc<Db>>,
 ) -> Result<Vec<RelationRow>, String> {
     vault_write::list_relations(&db, &entity_id).map_err(|e| e.to_string())
+}
+
+// === Phase 6 — LLM (off by default, BYO key) ==============================
+
+#[tauri::command]
+pub async fn llm_status(llm: State<'_, Arc<LlmRegistry>>) -> Result<LlmStatus, String> {
+    let kind = llm.current_kind().await;
+    let key_present = match kind {
+        Some(llm::LlmProviderKind::Anthropic) => keystore::has_key("anthropic"),
+        Some(llm::LlmProviderKind::Ollama) | None => true, // Ollama needs no key
+    };
+    Ok(llm.status(key_present).await)
+}
+
+#[tauri::command]
+pub async fn llm_configure(
+    config: LlmConfig,
+    api_key: Option<String>,
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<LlmStatus, String> {
+    if matches!(config.provider, llm::LlmProviderKind::Anthropic) {
+        let supplied = api_key.as_deref().filter(|k| !k.is_empty());
+        let final_key = match supplied {
+            Some(k) => Some(k.to_string()),
+            None => keystore::get_key("anthropic").map_err(|e| e.to_string())?,
+        };
+        let final_key = final_key.ok_or_else(|| {
+            "anthropic provider requires an api key (none supplied and none in keychain)"
+                .to_string()
+        })?;
+        keystore::set_key("anthropic", &final_key).map_err(|e| e.to_string())?;
+        llm.configure(config.clone(), Some(final_key))
+            .await
+            .map_err(|e| e.to_string())?;
+    } else {
+        llm.configure(config.clone(), None)
+            .await
+            .map_err(|e| e.to_string())?;
+    }
+    let key_present = match config.provider {
+        llm::LlmProviderKind::Anthropic => keystore::has_key("anthropic"),
+        llm::LlmProviderKind::Ollama => true,
+    };
+    Ok(llm.status(key_present).await)
+}
+
+#[tauri::command]
+pub async fn llm_clear_config(
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<LlmStatus, String> {
+    llm.clear().await;
+    keystore::clear_key("anthropic").map_err(|e| e.to_string())?;
+    Ok(llm.status(false).await)
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct LlmTokenEvent {
+    pub session_id: String,
+    pub token: Option<String>,
+    pub done: bool,
+    pub error: Option<String>,
+    pub input_tokens: Option<u32>,
+    pub output_tokens: Option<u32>,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct LlmChatRequest {
+    pub messages: Vec<Message>,
+    #[serde(default)]
+    pub system: Option<String>,
+    #[serde(default)]
+    pub temperature: Option<f32>,
+    #[serde(default)]
+    pub max_tokens: Option<u32>,
+}
+
+/// Stream a chat response. Returns immediately with a session id; tokens
+/// arrive as `llm:token` events keyed by that id.
+#[tauri::command]
+pub async fn llm_chat(
+    request: LlmChatRequest,
+    app: tauri::AppHandle,
+    llm: State<'_, Arc<LlmRegistry>>,
+) -> Result<String, String> {
+    let session_id = Uuid::new_v4().to_string();
+    let opts = ChatOpts {
+        max_tokens: request.max_tokens,
+        temperature: request.temperature,
+        system: request.system,
+    };
+
+    let session = session_id.clone();
+    let session_for_err = session_id.clone();
+    let app_clone = app.clone();
+    let llm_arc = llm.inner().clone();
+    let messages = request.messages;
+
+    tokio::spawn(async move {
+        // Acquire the provider stream synchronously *while holding* the
+        // read-guard, then drop the guard before consuming the stream
+        // — provider.chat() returns a future that must complete before
+        // streaming can begin.
+        let stream_result = {
+            let guard = llm_arc.read().await;
+            match guard.as_ref() {
+                Some(active) => active.provider().chat(messages, opts).await,
+                None => Err(anyhow::anyhow!("llm provider not configured")),
+            }
+        };
+
+        let mut stream = match stream_result {
+            Ok(s) => s,
+            Err(e) => {
+                let _ = app.emit(
+                    "llm:token",
+                    LlmTokenEvent {
+                        session_id: session_for_err,
+                        token: None,
+                        done: true,
+                        error: Some(e.to_string()),
+                        input_tokens: None,
+                        output_tokens: None,
+                    },
+                );
+                return;
+            }
+        };
+
+        while let Some(chunk_result) = stream.next().await {
+            match chunk_result {
+                Ok(ChatChunk::Text(token)) => {
+                    let _ = app_clone.emit(
+                        "llm:token",
+                        LlmTokenEvent {
+                            session_id: session.clone(),
+                            token: Some(token),
+                            done: false,
+                            error: None,
+                            input_tokens: None,
+                            output_tokens: None,
+                        },
+                    );
+                }
+                Ok(ChatChunk::End { usage }) => {
+                    let _ = app_clone.emit(
+                        "llm:token",
+                        LlmTokenEvent {
+                            session_id: session.clone(),
+                            token: None,
+                            done: true,
+                            error: None,
+                            input_tokens: usage.as_ref().and_then(|u| u.input_tokens),
+                            output_tokens: usage.as_ref().and_then(|u| u.output_tokens),
+                        },
+                    );
+                }
+                Err(e) => {
+                    let _ = app_clone.emit(
+                        "llm:token",
+                        LlmTokenEvent {
+                            session_id: session.clone(),
+                            token: None,
+                            done: true,
+                            error: Some(e.to_string()),
+                            input_tokens: None,
+                            output_tokens: None,
+                        },
+                    );
+                    return;
+                }
+            }
+        }
+    });
+
+    Ok(session_id)
 }
 
 /// The 5 v1 lens packs. Phase 1 returns the manifest; the actual content

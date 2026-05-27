@@ -46,6 +46,14 @@ Cross-platform PF2e Remaster + Christian Biblical worldview reference & worldbui
 - **CI matrix** at `.github/workflows/build.yml`: cargo test on macOS first; then a 4-target desktop matrix (macOS arm64 + x86_64, Linux x86_64, Windows x86_64), iOS cross-compile sanity, and Android debug APK build. All build-only — signing is Phase 8.
 - **What still needs a real device session**: iOS Simulator + Android Emulator hands-on UX shake-down, TestFlight + Play internal track upload, signing certificates.
 
+### Phase 6 § B — LLM provider scaffolding (done)
+- **Off by default, BYO key.** No provider runs at startup. Configure at `/settings/llm`.
+- **Two providers behind a single trait** (`src-tauri/src/llm.rs`): `AnthropicProvider` (SSE on `/v1/messages`) and `OllamaProvider` (NDJSON on `/api/chat` + `/api/embeddings`). Anthropic does not provide embeddings — its `embed()` errors; RAG indexing in Stage C uses Ollama for the embed half.
+- **Keys in the OS keychain** (`src-tauri/src/keystore.rs` over the `keyring` crate: macOS Keychain / Windows Credential Manager / libsecret). Never persisted in plaintext.
+- **Streaming chat at `/chat`**. The IPC `llm_chat` returns a session id and emits `llm:token` Tauri events; the Svelte page subscribes and appends tokens to the assistant slot. System prompt encodes the active lens and re-asserts the DragonRaid-trap rule.
+- **Disclaimer surface**: yellow banner on `/chat`, full disclaimer on `/settings/llm`, paragraph in `/about` under "design discipline".
+- **`SseBuffer`** is a pure parser with 5 unit tests + a 7-test integration suite (`tests/phase6_b.rs`) that covers registry lifecycle, provider guard rails, and a realistic Anthropic stream chopped into 17-byte fragments.
+
 ### Phase 3 — vault editor (done)
 - **Vault CRUD backend** (`src-tauri/src/vault_write.rs`): `list_campaigns`, `create_campaign`, `create_entity`, `update_entity` (with rename support that propagates filename changes), `delete_entity`, `add_relation`, `delete_relation`, `list_relations`. Entity writes go through the markdown vault on disk; the notify-rs watcher re-indexes via the existing Phase 1 ingestion path.
 - **Path safety**: every campaign/type/title segment is validated against traversal (`..`), absolute paths, and dotfile prefixes before any filesystem write.
@@ -82,7 +90,8 @@ test schema_migrates_seeds_and_searches ... ok
 
 ## What's not yet in the app (intentional, by phase)
 
-- **Phase 6** — LLM (Ollama + Anthropic), RAG, agent loop.
+- **Phase 6 § C** — RAG over bundled content (hybrid FTS + vector, RRF fusion).
+- **Phase 6 § D** — Tool-use loop wiring the PF2e validators as agent tools, plus Anthropic prompt caching for the canon.
 - **Phase 7** — Foundry export round-trip + plugin SDK.
 - **Phase 8** — App-store submission + signing pipeline.
 

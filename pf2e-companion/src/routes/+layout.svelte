@@ -24,6 +24,7 @@
     <a class="brand" href="/" aria-label="Home">pf2e-companion</a>
     <div class="pickers">
       <a class="about-link" href="/about" title="About this app">About</a>
+      <a class="about-link" href="/chat" title="Chat (optional LLM)">Chat</a>
       <label class="picker">
         <span>Campaign</span>
         <select

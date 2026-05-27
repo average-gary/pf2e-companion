@@ -42,5 +42,13 @@ uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 include_dir = "0.7.4"
 
+# LLM layer (Phase 6 § B). Provider-agnostic HTTP client for Anthropic + Ollama.
+# rustls-only to avoid native-tls / OpenSSL on every target.
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
+keyring = "3.6.3"
+eventsource-stream = "0.2.3"
+futures-util = "0.3.32"
+async-trait = "0.1"
+
 [dev-dependencies]
 tempfile = "3.27.0"

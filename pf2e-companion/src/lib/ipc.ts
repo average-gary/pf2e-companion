@@ -173,3 +173,62 @@ export const deleteRelation = (fromId: string, edgeType: string, toId: string) =
 
 export const listRelations = (entityId: string) =>
   invoke<RelationRow[]>("list_relations", { entityId });
+
+// === Phase 6 — LLM (off by default, BYO key) ==========================
+
+export type LlmProviderKind = "anthropic" | "ollama";
+
+export interface LlmConfig {
+  provider: LlmProviderKind;
+  model: string;
+  base_url?: string | null;
+}
+
+export interface LlmStatus {
+  configured: boolean;
+  provider: LlmProviderKind | null;
+  model: string | null;
+  key_present: boolean;
+}
+
+export type ChatRole = "system" | "user" | "assistant" | "tool";
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+export interface LlmTokenEvent {
+  session_id: string;
+  token: string | null;
+  done: boolean;
+  error: string | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
+}
+
+export const llmStatus = () => invoke<LlmStatus>("llm_status");
+
+export const llmConfigure = (
+  config: LlmConfig,
+  apiKey: string | null = null,
+) => invoke<LlmStatus>("llm_configure", { config, apiKey });
+
+export const llmClearConfig = () => invoke<LlmStatus>("llm_clear_config");
+
+export const llmChat = (
+  messages: ChatMessage[],
+  opts: {
+    system?: string | null;
+    temperature?: number | null;
+    maxTokens?: number | null;
+  } = {},
+) =>
+  invoke<string>("llm_chat", {
+    request: {
+      messages,
+      system: opts.system ?? null,
+      temperature: opts.temperature ?? null,
+      max_tokens: opts.maxTokens ?? null,
+    },
+  });
